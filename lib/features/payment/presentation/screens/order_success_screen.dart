@@ -94,6 +94,42 @@ class OrderSuccessScreen extends StatelessWidget {
                       width: 207,
                       height: 207,
                       fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 207,
+                          height: 207,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFF76E037),
+                                Color(0xFF45C01A),
+                                Color(0xFF269500),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(52),
+                            border: Border.all(
+                              color: const Color(0xFFA5F476),
+                              width: 4.0,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF269500).withValues(alpha: 0.4),
+                                blurRadius: 28,
+                                offset: const Offset(0, 14),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.check_rounded,
+                              size: 110,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

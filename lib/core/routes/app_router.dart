@@ -7,10 +7,10 @@ import '../../features/men_fashion/data/models/men_product_model.dart';
 import '../../features/category/presentation/screens/shop_by_category_screen.dart';
 import '../../features/cart/presentation/screens/my_cart_screen.dart';
 import '../../features/cart/presentation/screens/order_review_screen.dart';
-import '../../features/cart/presentation/screens/select_address_screen.dart';
-import '../../features/cart/presentation/screens/add_address_screen.dart';
-import '../../features/cart/presentation/screens/select_payment_method_screen.dart';
-import '../../features/cart/presentation/screens/order_success_screen.dart';
+import '../../features/address/presentation/screens/select_address_screen.dart';
+import '../../features/address/presentation/screens/add_address_screen.dart';
+import '../../features/payment/presentation/screens/select_payment_method_screen.dart';
+import '../../features/payment/presentation/screens/order_success_screen.dart';
 import 'route_names.dart';
 
 class AppRouter {

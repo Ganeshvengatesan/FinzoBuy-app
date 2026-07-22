@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../controllers/address_controller.dart';
+import '../../data/models/address_model.dart';
 
 class AddAddressScreen extends StatefulWidget {
   const AddAddressScreen({super.key});
@@ -87,7 +89,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               ),
             ),
 
-            // Scrollable Form Area (Frame 21: Width 400px, Gap 12px)
+            // EXACT FIGMA SPEC: Frame 21 (Width 400px, Gap 12px)
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 16),
@@ -96,56 +98,61 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Full Name Field (Label: 62px x 23px, Field: 400px x 50px)
+                      // Full Name Field (Rectangle 3463273: Width 400px, Height 50px, Radius 5px)
                       _buildLabel('Full Name', 62),
                       const SizedBox(height: 6),
                       _buildTextField(
                         controller: _fullNameController,
                         hintText: 'Enter Full Name',
+                        radius: 5,
                       ),
                       const SizedBox(height: 12),
 
-                      // Phone Number Field
+                      // Phone Number Field (Rectangle 3463273: Width 400px, Height 50px, Radius 5px)
                       _buildLabel('Phone Number', 100),
                       const SizedBox(height: 6),
                       _buildTextField(
                         controller: _phoneController,
                         hintText: 'Enter Full Name',
                         keyboardType: TextInputType.phone,
+                        radius: 5,
                       ),
                       const SizedBox(height: 12),
 
-                      // Address Line 1 Field
+                      // Address Line 1 Field (Rectangle 3463273: Width 400px, Height 50px, Radius 5px)
                       _buildLabel('Address Line 1', 100),
                       const SizedBox(height: 6),
                       _buildTextField(
                         controller: _addressLine1Controller,
                         hintText: 'Address Line 2',
+                        radius: 5,
                       ),
                       const SizedBox(height: 12),
 
-                      // Address Line 2 Field
+                      // Address Line 2 Field (Rectangle 3463273: Width 400px, Height 50px, Radius 5px)
                       _buildLabel('Address Line 2', 100),
                       const SizedBox(height: 6),
                       _buildTextField(
                         controller: _addressLine2Controller,
                         hintText: 'Address Line 2',
+                        radius: 5,
                       ),
                       const SizedBox(height: 12),
 
-                      // City Field
+                      // City Field (Rectangle 3463273: Width 400px, Height 50px, Radius 5px)
                       _buildLabel('City', 50),
                       const SizedBox(height: 6),
                       _buildTextField(
                         controller: _cityController,
                         hintText: 'Enter City',
+                        radius: 5,
                       ),
                       const SizedBox(height: 12),
 
-                      // State Dropdown (189px x 50px) & Zip Code (189px x 50px) Side-by-Side Row
+                      // EXACT FIGMA SPEC: Rectangle 3463274 State Dropdown (189px x 50px, Radius 10px) & Zip Code (189px x 50px, Radius 10px)
                       Row(
                         children: [
-                          // State Dropdown (189px width)
+                          // State Dropdown (189px width, Radius 10px)
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,7 +213,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
                           const SizedBox(width: 12),
 
-                          // Zip Code Field (189px width)
+                          // Zip Code Field (Rectangle 3463274: 189px width, Height 50px, Radius 10px)
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,6 +224,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                                   controller: _zipCodeController,
                                   hintText: 'Zip Code',
                                   keyboardType: TextInputType.number,
+                                  radius: 10,
                                 ),
                               ],
                             ),
@@ -277,6 +285,27 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         height: 45,
                         child: ElevatedButton(
                           onPressed: () {
+                            final name = _fullNameController.text.trim().isNotEmpty
+                                ? _fullNameController.text.trim()
+                                : 'John Deo';
+                            final line1 = _addressLine1Controller.text.trim().isNotEmpty
+                                ? _addressLine1Controller.text.trim()
+                                : 'No: 4, White avenue';
+                            final city = _cityController.text.trim().isNotEmpty
+                                ? _cityController.text.trim()
+                                : 'Madurai';
+                            final state = _selectedState ?? 'Tamil Nadu';
+
+                            AddressController().addAddress(
+                              AddressModel(
+                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                title: 'Home',
+                                name: name,
+                                fullAddress: '$line1, $city, $state',
+                                isDefault: _isDefaultAddress,
+                              ),
+                            );
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Address Saved Successfully!'),
@@ -308,7 +337,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
                       const SizedBox(height: 12),
 
-                      // Frame 23: Divider Row (Hug 390px x 23px, Gap 14px)
+                      // Frame 23: Divider Row (Or)
                       Row(
                         children: const [
                           Expanded(child: Divider(color: Color(0xFFE5E5E5))),
@@ -329,37 +358,46 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
                       const SizedBox(height: 12),
 
-                      // "Use Current Location" Button (388px x 45px, Radius 4px, Background #ECECEC, Border 1px 20% #151515)
-                      SizedBox(
-                        width: double.infinity,
-                        height: 45,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Fetching Current Location...'),
+                      // "Use Current Location" Button (Fixed 388px x 45px, Radius 4px, Background #ECECEC, Border 1px 20% #151515, Text Anek Latin 18px 500 Medium 159px x 20px)
+                      Center(
+                        child: SizedBox(
+                          width: 388,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Fetching Current Location...'),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFECECEC),
+                              foregroundColor: AppColors.menPrimaryBlue,
+                              elevation: 0,
+                              side: BorderSide(
+                                color: const Color(0xFF151515).withValues(alpha: 0.2),
+                                width: 1.0,
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFECECEC),
-                            foregroundColor: AppColors.menPrimaryBlue,
-                            elevation: 0,
-                            side: BorderSide(
-                              color: const Color(0xFF151515).withValues(alpha: 0.2),
-                              width: 1.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          child: const Text(
-                            'Use Current Location',
-                            style: TextStyle(
-                              fontFamily: 'AnekLatin',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.menPrimaryBlue,
+                            child: const SizedBox(
+                              width: 159,
+                              height: 20,
+                              child: Center(
+                                child: Text(
+                                  'Use Current Location',
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.menPrimaryBlue,
+                                    height: 1.0,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -377,7 +415,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
   }
 
-  // Label Helper Widget (Anek Latin 15px 400 Regular #151515, Height 23px)
+  // Label Helper Widget
   Widget _buildLabel(String text, double width) {
     return SizedBox(
       height: 23,
@@ -394,17 +432,18 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
   }
 
-  // Text Field Helper Widget (Rectangle 3463273: Height 50px, Radius 10px, Background #FFFFFF)
+  // Text Field Helper Widget
   Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
     TextInputType keyboardType = TextInputType.text,
+    double radius = 5,
   }) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
