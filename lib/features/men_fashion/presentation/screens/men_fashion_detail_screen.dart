@@ -168,7 +168,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Frame 1261154813: "Select Color : Dark Green" (Height 20px, Gap 6px)
+                          // EXACT FIGMA SPEC: Frame 1261154813 "Select Color : Dark Green" (Width Hug 212px, Height 20px, Gap 6px; Color Name: Anek Latin 20px 400 Regular #000000)
                           SizedBox(
                             height: 20,
                             child: Row(
@@ -176,19 +176,21 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                                 const Text(
                                   'Select Color : ',
                                   style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w800,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
                                     color: Colors.black,
                                     fontFamily: 'AnekLatin',
+                                    height: 1.0,
                                   ),
                                 ),
                                 Text(
                                   selectedVariant.colorName,
                                   style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xFF2E3A4B),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF000000),
                                     fontFamily: 'AnekLatin',
+                                    height: 1.0,
                                   ),
                                 ),
                               ],
@@ -281,9 +283,9 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
 
                     const SizedBox(height: 18),
 
-                    // EXACT FIGMA SPEC: Frame 1261154835 (Width 371px, Gap 9px, Left 20px)
+                    // EXACT FIGMA SPEC: Frame 1261154811 (Width 348px, Height 86px, Gap 14px) & Product Title (Width 400px, Height 81px, Anek Latin 18px 400 Regular 150% #000000)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 19.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -298,7 +300,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                           ),
                           const SizedBox(height: 9),
 
-                          // EXACT FIGMA SPEC: Frame 1261154810 & Group 1000011138 (52px x 52px, Border 1px #DBDBDB, Typography Anek Latin 18px Medium)
+                          // EXACT FIGMA SPEC: Size Options Row (52px x 52px, Border 1px #DBDBDB, Anek Latin 18px 500 Medium)
                           SizedBox(
                             height: 52,
                             child: ListView.separated(
@@ -354,17 +356,20 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                             ),
                           ),
 
-                          const SizedBox(height: 9),
+                          const SizedBox(height: 14),
 
-                          // EXACT FIGMA SPEC: Product Description Title (Anek Latin, Weight 400, Size 18px, Line Height 150%, #000000)
-                          const Text(
-                            "Pinkmint Men's Solid Shirt | Soft Cotton Blend | Casual Shirt | Plain | Full Sleeve - Regular Fit (Combo | Available in Plus Size)",
-                            style: TextStyle(
-                              fontFamily: 'AnekLatin',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF000000),
-                              height: 1.5,
+                          // EXACT FIGMA SPEC: Product Description Title (Width 400px, Height 81px, Anek Latin, Weight 400, Size 18px, Line Height 150%, #000000)
+                          const SizedBox(
+                            width: 400,
+                            child: Text(
+                              "Pinkmint Men's Solid Shirt | Soft Cotton Blend | Casual Shirt | Plain | Full Sleeve - Regular Fit (Combo | Available in Plus Size)",
+                              style: TextStyle(
+                                fontFamily: 'AnekLatin',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF000000),
+                                height: 1.5,
+                              ),
                             ),
                           ),
                         ],
@@ -373,34 +378,41 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
 
                     const SizedBox(height: 16),
 
-                    // EXACT FIGMA DEV MODE SPEC: Group 1000011152 (Width 401px, Height 72px) & Group 1000011150 (Width 121px, Height 57px)
+                    // EXACT FIGMA DEV MODE SPEC: Frame 1261154822 (Width 401px, Height 57px, Justify Space-Between) & Frame 1261154823 Hot Deal Badge (49px x 14px, Radius 30px, #FF2B2B)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 19.0),
                       child: SizedBox(
-                        height: 72,
+                        width: 401,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                // EXACT FIGMA SPEC: Frame 1261154823 Hot Deal Badge (Width 49px, Height 14px, Radius 30px, Color #FF2B2B)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  width: 49,
+                                  height: 14,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFFF2B2B),
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(30),
                                   ),
-                                  child: const Text(
-                                    'Hot Deal',
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.white,
+                                  child: const Center(
+                                    child: Text(
+                                      'Hot Deal',
+                                      style: TextStyle(
+                                        fontFamily: 'AnekLatin',
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                        height: 1.0,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: 4),
 
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -597,41 +609,43 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      'FulFilled By VKfashion',
-                                      style: TextStyle(
-                                        fontFamily: 'AnekLatin',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(0xFF151515),
-                                        height: 1.0,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'FulFilled By VKfashion',
+                                        style: TextStyle(
+                                          fontFamily: 'AnekLatin',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xFF151515),
+                                          height: 1.0,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          '4.3 ★ ',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.black87,
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            '4.3 ★ ',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.black87,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          '4 Years with finzopay',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey.shade700,
+                                          Text(
+                                            '4 Years with finzopay',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey.shade700,
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -642,13 +656,12 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
 
                     const SizedBox(height: 18),
 
-                    // "About this item" Card
+                    // EXACT FIGMA SPEC: Rectangle 3463308 "About this item" Card (Width 401px, Height 176px, Radius 10px, Border 2px #FFFFFF, Background #FFF6DB)
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 19),
-                      height: 176,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.menSectionBg,
+                        color: const Color(0xFFFFF6DB),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.white,
@@ -656,6 +669,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                         ),
                       ),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
@@ -688,6 +702,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                           ),
                           const SizedBox(height: 12),
 
+                          // Bullet Point 1
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
@@ -705,15 +720,16 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: Color(0xFF000000),
-                                    height: 1.5,
+                                    height: 1.4,
                                   ),
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 6),
 
+                          // Bullet Point 2
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
@@ -731,7 +747,34 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: Color(0xFF000000),
-                                    height: 1.5,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          // Bullet Point 3 (From Figma Dev Mode)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: Icon(Icons.check_circle, size: 16, color: Colors.green),
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'This Stylish Shirt with Collar Has a Spread Collar and Long Sleeves.',
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xFF000000),
+                                    height: 1.4,
                                   ),
                                 ),
                               ),
@@ -743,7 +786,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
 
                     const SizedBox(height: 18),
 
-                    // Style Specs Table Section
+                    // EXACT FIGMA SPEC: Style Specs Table Section (Circle Arrow 28px x 28px #4D43FE, Vector 4 Divider 372px 10% #000000, Labels 142px x 23px Anek Latin 16px 500 Medium 144% #151515, Values 80px x 23px Anek Latin 16px 400 Regular 144% #151515 Right Aligned)
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 19),
                       height: 307,
@@ -769,40 +812,54 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                                   height: 1.0,
                                 ),
                               ),
+
+                              // EXACT FIGMA SPEC: Frame 1261154862 (28px x 28px, Radius 14.74px, Color #4D43FE)
                               Container(
-                                width: 26,
-                                height: 26,
+                                width: 28,
+                                height: 28,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: AppColors.menPrimaryBlue,
                                 ),
                                 child: const Icon(
-                                  Icons.arrow_forward,
-                                  size: 14,
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 13,
                                   color: Colors.white,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 10),
+
+                          // EXACT FIGMA SPEC: Vector 4 Divider Line (372px width, 1px height, #000000 10% opacity)
+                          Container(
+                            width: double.infinity,
+                            height: 1,
+                            color: const Color(0xFF000000).withValues(alpha: 0.1),
+                          ),
+                          const SizedBox(height: 10),
 
                           Expanded(
                             child: Row(
                               children: [
+                                // EXACT FIGMA SPEC: Labels Column (Width 142px, Height 23px, Anek Latin 16px 500 Medium 144% #151515)
                                 SizedBox(
                                   width: 142,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: styleSpecs.map((spec) {
-                                      return Text(
-                                        spec['label']!,
-                                        style: const TextStyle(
-                                          fontFamily: 'AnekLatin',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFF151515),
-                                          height: 1.44,
+                                      return SizedBox(
+                                        height: 23,
+                                        child: Text(
+                                          spec['label']!,
+                                          style: const TextStyle(
+                                            fontFamily: 'AnekLatin',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFF151515),
+                                            height: 1.44,
+                                          ),
                                         ),
                                       );
                                     }).toList(),
@@ -811,20 +868,25 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
 
                                 const Spacer(),
 
+                                // EXACT FIGMA SPEC: Values Column (Width 80px, Height 23px, Anek Latin 16px 400 Regular 144% #151515 Right Aligned)
                                 SizedBox(
                                   width: 120,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: styleSpecs.map((spec) {
-                                      return Text(
-                                        spec['value']!,
-                                        textAlign: TextAlign.right,
-                                        style: const TextStyle(
-                                          fontFamily: 'AnekLatin',
-                                          fontSize: 14,
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w700,
+                                      return SizedBox(
+                                        height: 23,
+                                        child: Text(
+                                          spec['value']!,
+                                          textAlign: TextAlign.right,
+                                          style: const TextStyle(
+                                            fontFamily: 'AnekLatin',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            color: Color(0xFF151515),
+                                            height: 1.44,
+                                          ),
                                         ),
                                       );
                                     }).toList(),
@@ -1249,6 +1311,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                                 backgroundColor: AppColors.menPrimaryBlue,
                               ),
                             );
+                            context.push(RouteNames.cartPath);
                           },
                           icon: const SizedBox(
                             width: 20,
@@ -1284,12 +1347,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                         height: 45,
                         child: ElevatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Proceeding to Checkout!'),
-                                backgroundColor: AppColors.menPrimaryBlue,
-                              ),
-                            );
+                            context.push(RouteNames.checkoutPath);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.menPrimaryBlue,
