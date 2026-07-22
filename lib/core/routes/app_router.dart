@@ -81,6 +81,8 @@ class AppRouter {
         name: RouteNames.productReviews,
         path: RouteNames.productReviewsPath,
         builder: (context, state) => const ProductReviewsScreen(),
+      ),
+      GoRoute(
         name: RouteNames.cart,
         path: RouteNames.cartPath,
         builder: (context, state) => const MyCartScreen(),
