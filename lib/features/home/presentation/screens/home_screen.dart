@@ -64,16 +64,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           isEmbedded: true,
                           onBackTap: () => _controller.setNavIndex(0),
                         )
-                      : _controller.currentNavIndex == 3
-                          ? MyOrderScreen(
-                              onBackTap: () => _controller.setNavIndex(0),
-                            )
-                          : SafeArea(
-                              child: RefreshIndicator(
                       : _controller.currentNavIndex == 2
                           ? const MyCartScreen()
-                          : SafeArea(
-                          child: RefreshIndicator(
+                          : _controller.currentNavIndex == 3
+                              ? MyOrderScreen(
+                                  onBackTap: () => _controller.setNavIndex(0),
+                                )
+                              : SafeArea(
+                                  child: RefreshIndicator(
                             onRefresh: _controller.loadHomeData,
                             child: SingleChildScrollView(
                               physics: const AlwaysScrollableScrollPhysics(),
