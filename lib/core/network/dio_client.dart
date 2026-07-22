@@ -4,9 +4,13 @@ import '../constants/api_endpoints.dart';
 import 'api_exception.dart';
 
 class DioClient {
+  static final DioClient _instance = DioClient._internal();
+  factory DioClient() => _instance;
+  static DioClient get instance => _instance;
+
   late final Dio _dio;
 
-  DioClient({Dio? dio}) {
+  DioClient._internal({Dio? dio}) {
     _dio = dio ?? Dio();
     _dio
       ..options.baseUrl = ApiEndpoints.baseUrl
