@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
 import '../../data/models/category_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
@@ -30,7 +32,12 @@ class CategoryBar extends StatelessWidget {
             final unselectedColor = AppColors.unselectedIcon;
 
             return GestureDetector(
-              onTap: () => onCategorySelected(category.id),
+              onTap: () {
+                onCategorySelected(category.id);
+                if (category.name.toLowerCase().contains('fashion') || category.id.contains('fashion')) {
+                  context.push(RouteNames.menFashionPath);
+                }
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
