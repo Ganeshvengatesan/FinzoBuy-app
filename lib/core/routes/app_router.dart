@@ -37,6 +37,7 @@ class AppRouter {
           return MenFashionDetailScreen(product: product);
         },
       ),
+      GoRoute(
         name: RouteNames.category,
         path: RouteNames.categoryPath,
         builder: (context, state) => const ShopByCategoryScreen(),
