@@ -12,6 +12,7 @@ import '../widgets/spotlight_section.dart';
 import '../widgets/tech_deals_section.dart';
 import '../widgets/ai_banner_section.dart';
 import '../widgets/best_sellers_section.dart';
+import '../../../category/presentation/screens/shop_by_category_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
@@ -52,75 +53,79 @@ class _HomeScreenState extends State<HomeScreen> {
       listenable: _controller,
       builder: (context, child) {
         return Scaffold(
-          body: SafeArea(
-            child: _controller.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _controller.errorMessage != null
-                    ? _buildErrorState(theme)
-                    : RefreshIndicator(
-                        onRefresh: _controller.loadHomeData,
-                        child: SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // 1. Header (Location + Notifications + Search)
-                              const HomeHeader(),
-                              AppSizes.hGap8,
+          body: _controller.isLoading
+              ? const SafeArea(child: Center(child: CircularProgressIndicator()))
+              : _controller.errorMessage != null
+                  ? SafeArea(child: _buildErrorState(theme))
+                  : _controller.currentNavIndex == 1
+                      ? ShopByCategoryScreen(
+                          isEmbedded: true,
+                          onBackTap: () => _controller.setNavIndex(0),
+                        )
+                      : SafeArea(
+                          child: RefreshIndicator(
+                            onRefresh: _controller.loadHomeData,
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // 1. Header (Location + Notifications + Search)
+                                  const HomeHeader(),
+                                  AppSizes.hGap8,
 
-                              // 2. Horizontal Categories
-                              CategoryBar(
-                                categories: _controller.categories,
-                                selectedCategoryId: _selectedCategoryId,
-                                onCategorySelected: (categoryId) {
-                                  setState(() {
-                                    _selectedCategoryId = categoryId;
-                                  });
-                                },
+                                  // 2. Horizontal Categories
+                                  CategoryBar(
+                                    categories: _controller.categories,
+                                    selectedCategoryId: _selectedCategoryId,
+                                    onCategorySelected: (categoryId) {
+                                      setState(() {
+                                        _selectedCategoryId = categoryId;
+                                      });
+                                    },
+                                  ),
+                                  AppSizes.hGap16,
+
+                                  // 3. Sliding Banners (Carousel)
+                                  const PromoCarousel(),
+                                  AppSizes.hGap24,
+
+                                  // 4. Recently Viewed Products
+                                  RecentlyViewedSection(products: _controller.recentlyViewed),
+                                  AppSizes.hGap24,
+
+                                  // 5. Top Deals (2x2 Grid Categories)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p16),
+                                    child: TopDealsSection(dealCategories: _controller.topDeals),
+                                  ),
+                                  AppSizes.hGap24,
+
+                                  // 6. In the Spotlight (Galaxy S24 Banner)
+                                  const SpotlightSection(),
+                                  AppSizes.hGap24,
+
+                                  // 7. Top Deals on Tech
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.p16),
+                                    child: TechDealsSection(techProducts: _controller.techDeals),
+                                  ),
+                                  AppSizes.hGap24,
+
+                                  // 8. AI Banner (Earbuds Banner)
+                                  const AiBannerSection(),
+                                  AppSizes.hGap24,
+
+                                  // 9. Best Sellers in Clothing & Accessories
+                                  BestSellersSection(products: _controller.bestSellers),
+                                  
+                                  // Bottom spacer
+                                  AppSizes.hGap32,
+                                ],
                               ),
-                              AppSizes.hGap16,
-
-                              // 3. Sliding Banners (Carousel)
-                              const PromoCarousel(),
-                              AppSizes.hGap24,
-
-                              // 4. Recently Viewed Products
-                              RecentlyViewedSection(products: _controller.recentlyViewed),
-                              AppSizes.hGap24,
-
-                              // 5. Top Deals (2x2 Grid Categories)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p16),
-                                child: TopDealsSection(dealCategories: _controller.topDeals),
-                              ),
-                              AppSizes.hGap24,
-
-                              // 6. In the Spotlight (Galaxy S24 Banner)
-                              const SpotlightSection(),
-                              AppSizes.hGap24,
-
-                              // 7. Top Deals on Tech
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: AppSizes.p16),
-                                child: TechDealsSection(techProducts: _controller.techDeals),
-                              ),
-                              AppSizes.hGap24,
-
-                              // 8. AI Banner (Earbuds Banner)
-                              const AiBannerSection(),
-                              AppSizes.hGap24,
-
-                              // 9. Best Sellers in Clothing & Accessories
-                              BestSellersSection(products: _controller.bestSellers),
-                              
-                              // Bottom spacer
-                              AppSizes.hGap32,
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-          ),
-          
           bottomNavigationBar: SizedBox(
             height: 76.0,
             child: Container(
@@ -133,71 +138,71 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               child: BottomNavigationBar(
-              currentIndex: _controller.currentNavIndex,
-              onTap: _controller.setNavIndex,
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: isDarkMode ? theme.colorScheme.surface : Colors.white,
-              selectedItemColor: activeNavColor,
-              unselectedItemColor: inactiveNavColor,
-              selectedFontSize: 11.0,
-              unselectedFontSize: 11.0,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: SvgPicture.asset(
-                      'assets/icons/ic_home.svg',
-                      width: 22,
-                      height: 22,
-                      colorFilter: ColorFilter.mode(
-                        _controller.currentNavIndex == 0 ? activeNavColor : inactiveNavColor,
-                        BlendMode.srcIn,
+                currentIndex: _controller.currentNavIndex,
+                onTap: _controller.setNavIndex,
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: isDarkMode ? theme.colorScheme.surface : Colors.white,
+                selectedItemColor: activeNavColor,
+                unselectedItemColor: inactiveNavColor,
+                selectedFontSize: 11.0,
+                unselectedFontSize: 11.0,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: SvgPicture.asset(
+                        'assets/icons/ic_home.svg',
+                        width: 22,
+                        height: 22,
+                        colorFilter: ColorFilter.mode(
+                          _controller.currentNavIndex == 0 ? activeNavColor : inactiveNavColor,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
+                    label: 'Home',
                   ),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Image.asset(
-                      'assets/icons/ic_category.png',
-                      width: 22,
-                      height: 22,
-                      color: _controller.currentNavIndex == 1 ? activeNavColor : inactiveNavColor,
+                  BottomNavigationBarItem(
+                    icon: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Image.asset(
+                        'assets/icons/ic_category.png',
+                        width: 22,
+                        height: 22,
+                        color: _controller.currentNavIndex == 1 ? activeNavColor : inactiveNavColor,
+                      ),
                     ),
+                    label: 'Category',
                   ),
-                  label: 'Category',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Image.asset(
-                      'assets/icons/ic_cart.png',
-                      width: 22,
-                      height: 22,
-                      color: _controller.currentNavIndex == 2 ? activeNavColor : inactiveNavColor,
+                  BottomNavigationBarItem(
+                    icon: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Image.asset(
+                        'assets/icons/ic_cart.png',
+                        width: 22,
+                        height: 22,
+                        color: _controller.currentNavIndex == 2 ? activeNavColor : inactiveNavColor,
+                      ),
                     ),
+                    label: 'Cart',
                   ),
-                  label: 'Cart',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Image.asset(
-                      'assets/icons/ic_profile.png',
-                      width: 22,
-                      height: 22,
-                      color: _controller.currentNavIndex == 3 ? activeNavColor : inactiveNavColor,
+                  BottomNavigationBarItem(
+                    icon: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Image.asset(
+                        'assets/icons/ic_profile.png',
+                        width: 22,
+                        height: 22,
+                        color: _controller.currentNavIndex == 3 ? activeNavColor : inactiveNavColor,
+                      ),
                     ),
+                    label: 'Profile',
                   ),
-                  label: 'Profile',
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
       },
     );
   }

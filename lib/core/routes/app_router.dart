@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/category/presentation/screens/shop_by_category_screen.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -19,6 +20,11 @@ class AppRouter {
         name: RouteNames.home,
         path: RouteNames.homePath,
         builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.category,
+        path: RouteNames.categoryPath,
+        builder: (context, state) => const ShopByCategoryScreen(),
       ),
       // Future routes can be registered here:
       // GoRoute(
