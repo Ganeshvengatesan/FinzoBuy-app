@@ -10,6 +10,9 @@ class RouteNames {
   static const String menFashionDetail = 'menFashionDetail';
   static const String menFashionDetailPath = '/men-fashion/detail';
 
+  static const String category = 'category';
+  static const String categoryPath = '/category';
+  
   // Example future routes
   static const String productDetails = 'productDetails';
   static const String productDetailsPath = '/product/:id';
