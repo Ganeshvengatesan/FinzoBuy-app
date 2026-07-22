@@ -33,5 +33,11 @@ class AppColors {
   static const Color success = Color(0xFF10B981);
   static const Color warning = Color(0xFFF59E0B);
   
+  // Figma Men Fashion Tokens
+  static const Color menHeaderBg = Color(0xFFF4F3FF);
+  static const Color menSectionBg = Color(0xFFFFF6DB);
+  static const Color menPrimaryBlue = Color(0xFF4B49E7);
+  static const Color menActiveCategoryBg = Color(0xFFEBF0FF);
+
   static const Color transparent = Colors.transparent;
 }
