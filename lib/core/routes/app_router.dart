@@ -39,14 +39,40 @@ class AppRouter {
       GoRoute(
         name: RouteNames.menFashion,
         path: RouteNames.menFashionPath,
-        builder: (context, state) => const MenFashionScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const MenFashionScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOutCubic;
+            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
       ),
       GoRoute(
         name: RouteNames.menFashionDetail,
         path: RouteNames.menFashionDetailPath,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final product = state.extra as MenProductModel?;
-          return MenFashionDetailScreen(product: product);
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: MenFashionDetailScreen(product: product),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              const curve = Curves.easeInOutCubic;
+              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          );
         },
       ),
       GoRoute(

@@ -83,14 +83,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       top: 0,
                                       left: 0,
                                       right: 0,
-                                      height: 220.0,
+                                      height: 240.0,
                                       child: Container(
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
+                                            stops: const [0.0, 0.65, 1.0],
                                             colors: [
-                                              AppColors.lightPrimary.withValues(alpha: 0.10),
+                                              AppColors.lightPrimary.withValues(alpha: 0.18),
+                                              AppColors.lightPrimary.withValues(alpha: 0.05),
                                               AppColors.lightPrimary.withValues(alpha: 0.0),
                                             ],
                                           ),
