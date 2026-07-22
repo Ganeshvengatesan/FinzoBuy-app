@@ -6,7 +6,7 @@ class AppColors {
   // Premium Palette - Light Mode
   static const Color lightPrimary = Color(0xFF4D43FE); // Brand royal blue/purple
   static const Color lightSecondary = Color(0xFFD4AF37); // Warm gold accent
-  static const Color lightBackground = Color(0xFFF3F5F7); // Off-white background
+  static const Color lightBackground = Color(0xFFFFFFFF); // Pure white background
   static const Color lightSurface = Color(0xFFFFFFFF); // Pure white
   static const Color lightCard = Color(0xFFFFFFFF);
   static const Color lightDivider = Color(0xFFE5E7EB); // Tailwind gray-200
@@ -38,6 +38,11 @@ class AppColors {
   static const Color menSectionBg = Color(0xFFFFF6DB);
   static const Color menPrimaryBlue = Color(0xFF4B49E7);
   static const Color menActiveCategoryBg = Color(0xFFEBF0FF);
+
+  // Pink Fashion Accent Colors (Myntra-style tab bar UI)
+  static const Color pinkPrimary = Color(0xFFFF3F6C);
+  static const Color pinkShade = Color(0xFFFFF0F3);
+  static const Color pinkShadeBorder = Color(0xFFFFE0E8);
 
   static const Color transparent = Colors.transparent;
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../../data/repositories/product_repository_impl.dart';
 import '../controllers/home_controller.dart';
@@ -12,10 +11,10 @@ import '../widgets/spotlight_section.dart';
 import '../widgets/tech_deals_section.dart';
 import '../widgets/ai_banner_section.dart';
 import '../widgets/best_sellers_section.dart';
+import '../widgets/fashion_bottom_nav_bar.dart';
 import '../../../category/presentation/screens/shop_by_category_screen.dart';
 import '../../../order/presentation/screens/my_order_screen.dart';
 import '../../../cart/presentation/screens/my_cart_screen.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,15 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
-    final Color activeNavColor = AppColors.lightPrimary;
-    final Color inactiveNavColor = AppColors.unselectedIcon;
 
     return ListenableBuilder(
       listenable: _controller,
       builder: (context, child) {
         return Scaffold(
+          backgroundColor: Colors.white,
           body: _controller.isLoading
               ? const SafeArea(child: Center(child: CircularProgressIndicator()))
               : _controller.errorMessage != null
@@ -134,81 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-          bottomNavigationBar: SizedBox(
-            height: 76.0,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: isDarkMode ? AppColors.darkDivider : AppColors.lightDivider,
-                    width: 1.0,
-                  ),
-                ),
-              ),
-              child: BottomNavigationBar(
-                currentIndex: _controller.currentNavIndex,
-                onTap: _controller.setNavIndex,
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: isDarkMode ? theme.colorScheme.surface : Colors.white,
-                selectedItemColor: activeNavColor,
-                unselectedItemColor: inactiveNavColor,
-                selectedFontSize: 11.0,
-                unselectedFontSize: 11.0,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: SvgPicture.asset(
-                        'assets/icons/ic_home.svg',
-                        width: 22,
-                        height: 22,
-                        colorFilter: ColorFilter.mode(
-                          _controller.currentNavIndex == 0 ? activeNavColor : inactiveNavColor,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Image.asset(
-                        'assets/icons/ic_category.png',
-                        width: 22,
-                        height: 22,
-                        color: _controller.currentNavIndex == 1 ? activeNavColor : inactiveNavColor,
-                      ),
-                    ),
-                    label: 'Category',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Image.asset(
-                        'assets/icons/ic_cart.png',
-                        width: 22,
-                        height: 22,
-                        color: _controller.currentNavIndex == 2 ? activeNavColor : inactiveNavColor,
-                      ),
-                    ),
-                    label: 'Cart',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Image.asset(
-                        'assets/icons/ic_profile.png',
-                        width: 22,
-                        height: 22,
-                        color: _controller.currentNavIndex == 3 ? activeNavColor : inactiveNavColor,
-                      ),
-                    ),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
-            ),
+          bottomNavigationBar: FashionBottomNavBar(
+            currentIndex: _controller.currentNavIndex,
+            onTap: _controller.setNavIndex,
           ),
         );
       },
