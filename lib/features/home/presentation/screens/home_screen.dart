@@ -13,6 +13,7 @@ import '../widgets/tech_deals_section.dart';
 import '../widgets/ai_banner_section.dart';
 import '../widgets/best_sellers_section.dart';
 import '../../../category/presentation/screens/shop_by_category_screen.dart';
+import '../../../order/presentation/screens/my_order_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
@@ -62,8 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           isEmbedded: true,
                           onBackTap: () => _controller.setNavIndex(0),
                         )
-                      : SafeArea(
-                          child: RefreshIndicator(
+                      : _controller.currentNavIndex == 3
+                          ? MyOrderScreen(
+                              onBackTap: () => _controller.setNavIndex(0),
+                            )
+                          : SafeArea(
+                              child: RefreshIndicator(
                             onRefresh: _controller.loadHomeData,
                             child: SingleChildScrollView(
                               physics: const AlwaysScrollableScrollPhysics(),

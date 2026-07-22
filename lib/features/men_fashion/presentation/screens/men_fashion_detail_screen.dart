@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/routes/route_names.dart';
 import '../../data/models/men_product_model.dart';
 
 class MenFashionDetailScreen extends StatefulWidget {
@@ -447,34 +448,38 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
 
                             const Spacer(),
 
-                            SizedBox(
-                              width: 88,
-                              height: 40,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: List.generate(
-                                      5,
-                                      (index) => const Icon(
-                                        Icons.star_rounded,
-                                        size: 14.67,
-                                        color: Color(0xFFEBA928),
+                            GestureDetector(
+                              onTap: () => context.push(RouteNames.productReviewsPath),
+                              behavior: HitTestBehavior.opaque,
+                              child: SizedBox(
+                                width: 88,
+                                height: 40,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: List.generate(
+                                        5,
+                                        (index) => const Icon(
+                                          Icons.star_rounded,
+                                          size: 14.67,
+                                          color: Color(0xFFEBA928),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    '(100 Review)',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey.shade600,
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      '(100 Review)',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey.shade600,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],

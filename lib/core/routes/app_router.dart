@@ -5,6 +5,12 @@ import '../../features/men_fashion/presentation/screens/men_fashion_screen.dart'
 import '../../features/men_fashion/presentation/screens/men_fashion_detail_screen.dart';
 import '../../features/men_fashion/data/models/men_product_model.dart';
 import '../../features/category/presentation/screens/shop_by_category_screen.dart';
+import '../../features/order/presentation/screens/my_order_screen.dart';
+import '../../features/order/presentation/screens/order_details_screen.dart';
+import '../../features/order/presentation/screens/track_order_screen.dart';
+import '../../features/review/presentation/screens/write_review_screen.dart';
+import '../../features/review/presentation/screens/product_reviews_screen.dart';
+import '../../features/order/data/models/order_model.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -41,6 +47,34 @@ class AppRouter {
         name: RouteNames.category,
         path: RouteNames.categoryPath,
         builder: (context, state) => const ShopByCategoryScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.myOrder,
+        path: RouteNames.myOrderPath,
+        builder: (context, state) => const MyOrderScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.orderDetails,
+        path: RouteNames.orderDetailsPath,
+        builder: (context, state) {
+          final order = state.extra as OrderModel?;
+          return OrderDetailsScreen(order: order);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.trackOrder,
+        path: RouteNames.trackOrderPath,
+        builder: (context, state) => const TrackOrderScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.writeReview,
+        path: RouteNames.writeReviewPath,
+        builder: (context, state) => const WriteReviewScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.productReviews,
+        path: RouteNames.productReviewsPath,
+        builder: (context, state) => const ProductReviewsScreen(),
       ),
       // Future routes can be registered here:
       // GoRoute(
