@@ -26,8 +26,8 @@ class CartItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // EXACT FIGMA SPEC: Group 1000011165 (Width: 401px, Height: 217px, Radius: 16px, Background: #FFFFFF)
     return Container(
-      width: 401,
-      height: 217,
+      width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 401),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -135,10 +135,9 @@ class CartItemCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
 
-                    // EXACT FIGMA SPEC: Group 100001164 (Width: 233px, Height: 56px, #EAFCEB Light Green Box)
+                    // EXACT FIGMA SPEC: Group 100001164 (#EAFCEB Light Green Box)
                     Container(
-                      width: 233,
-                      height: 56,
+                      width: double.infinity,
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: const Color(0xFFEAFCEB),
@@ -151,20 +150,24 @@ class CartItemCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: const [
-                              Icon(Icons.local_shipping, size: 14, color: Color(0xFF00A859)),
-                              SizedBox(width: 4),
-                              Text(
-                                'Eligible For FREE delivery',
-                                style: TextStyle(
-                                  fontFamily: 'AnekLatin',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF00A859),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: const [
+                                Icon(Icons.local_shipping, size: 14, color: Color(0xFF00A859)),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Eligible For FREE delivery',
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF00A859),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 2),
                           Text(
@@ -235,25 +238,30 @@ class CartItemCard extends StatelessWidget {
                     color: const Color(0xFFFFE5E5),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: Icon(Icons.delete_outline, size: 18, color: Color(0xFFD32F2F)),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: Icon(Icons.delete_outline, size: 18, color: Color(0xFFD32F2F)),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            'Remove',
+                            style: TextStyle(
+                              fontFamily: 'AnekLatin',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFFD32F2F),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 4),
-                      Text(
-                        'Remove',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFD32F2F),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -268,25 +276,30 @@ class CartItemCard extends StatelessWidget {
                     color: const Color(0xFFE0F8E6),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: Icon(Icons.bookmark_outline, size: 18, color: Color(0xFF008B15)),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: Icon(Icons.bookmark_outline, size: 18, color: Color(0xFF008B15)),
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            'Save Later',
+                            style: TextStyle(
+                              fontFamily: 'AnekLatin',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF008B15),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 4),
-                      Text(
-                        'Save Later',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF008B15),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
