@@ -9,6 +9,8 @@ class CartItemCard extends StatelessWidget {
   final int quantity;
   final VoidCallback onDecrement;
   final VoidCallback onIncrement;
+  final VoidCallback? onRemove;
+  final VoidCallback? onSaveLater;
 
   const CartItemCard({
     super.key,
@@ -20,15 +22,17 @@ class CartItemCard extends StatelessWidget {
     required this.quantity,
     required this.onDecrement,
     required this.onIncrement,
+    this.onRemove,
+    this.onSaveLater,
   });
 
   @override
   Widget build(BuildContext context) {
-    // EXACT FIGMA SPEC: Group 1000011165 (Width: 401px, Height: 217px, Radius: 16px, Background: #FFFFFF)
+    // EXACT FIGMA SPEC: Group 1000011165 (Width: 401px, MinHeight: 215px, Radius: 16px, Background: #FFFFFF)
     return Container(
-      width: 401,
-      height: 217,
-      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      constraints: const BoxConstraints(minHeight: 215),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -193,7 +197,7 @@ class CartItemCard extends StatelessWidget {
               // Quantity Counter Pill Container (#FFF9E6)
               Container(
                 height: 32,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFF9E6),
                   borderRadius: BorderRadius.circular(6),
@@ -201,12 +205,16 @@ class CartItemCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    GestureDetector(
+                    InkWell(
                       onTap: onDecrement,
-                      child: const Icon(Icons.remove, size: 14, color: Colors.black),
+                      borderRadius: BorderRadius.circular(4),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        child: Icon(Icons.remove, size: 16, color: Colors.black),
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
                       child: Text(
                         quantity < 10 ? '0$quantity' : '$quantity',
                         style: const TextStyle(
@@ -217,9 +225,13 @@ class CartItemCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: onIncrement,
-                      child: const Icon(Icons.add, size: 14, color: Colors.black),
+                      borderRadius: BorderRadius.circular(4),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                        child: Icon(Icons.add, size: 16, color: Colors.black),
+                      ),
                     ),
                   ],
                 ),
@@ -227,66 +239,74 @@ class CartItemCard extends StatelessWidget {
 
               const SizedBox(width: 8),
 
-              // Remove Button (Frame 1261154839: Icon 18px x 18px, #FFE5E5)
+              // Remove Button
               Expanded(
-                child: Container(
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFE5E5),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: Icon(Icons.delete_outline, size: 18, color: Color(0xFFD32F2F)),
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        'Remove',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFD32F2F),
+                child: GestureDetector(
+                  onTap: onRemove,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFE5E5),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: Icon(Icons.delete_outline, size: 18, color: Color(0xFFD32F2F)),
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 4),
+                        Text(
+                          'Remove',
+                          style: TextStyle(
+                            fontFamily: 'AnekLatin',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFD32F2F),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
 
               const SizedBox(width: 8),
 
-              // Save Later Button (Icon 18px x 18px, #E0F8E6)
+              // Save Later Button
               Expanded(
-                child: Container(
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE0F8E6),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: Icon(Icons.bookmark_outline, size: 18, color: Color(0xFF008B15)),
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        'Save Later',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF008B15),
+                child: GestureDetector(
+                  onTap: onSaveLater,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE0F8E6),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: Icon(Icons.bookmark_outline, size: 18, color: Color(0xFF008B15)),
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 4),
+                        Text(
+                          'Save Later',
+                          style: TextStyle(
+                            fontFamily: 'AnekLatin',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF008B15),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

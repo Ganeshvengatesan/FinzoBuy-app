@@ -3,6 +3,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
 import '../../data/models/men_product_model.dart';
+import '../../../cart/controllers/cart_controller.dart';
+import '../../../cart/data/models/cart_item_model.dart';
+import '../../../profile/controllers/wishlist_controller.dart';
+
 
 class MenFashionDetailScreen extends StatefulWidget {
   final MenProductModel? product;
@@ -74,6 +78,16 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
         : defaultVariants;
 
     final selectedVariant = variants[_selectedColorIndex];
+    final activeProduct = widget.product ?? MenProductModel(
+      id: 'detail_prod_1',
+      title: 'Regular Fit Shirt | Cotton...',
+      subtitle: 'Regular Fit Shirt | Cotton...',
+      imageAsset: selectedVariant.imageAsset,
+      originalPrice: 59.99,
+      discountPrice: selectedVariant.price,
+      rating: 4.0,
+      reviewCount: 453,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
@@ -111,6 +125,15 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                     height: 30,
                     child: Icon(Icons.search, size: 24, color: Colors.black),
                   ),
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: () => context.push(RouteNames.cartPath),
+                    child: const SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: Icon(Icons.shopping_cart_outlined, size: 24, color: Colors.black),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -122,44 +145,98 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // EXACT FIGMA SPEC: Main Hero Product Image Container (Rectangle 3463296: 401px x 570px, Radius 17.46px, Border 0.92px #FFFFFF)
-                    Container(
-                      width: double.infinity,
-                      height: 570,
-                      margin: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(17.46),
-                        color: Colors.grey.shade100,
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 0.92,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 16,
-                            offset: const Offset(0, 6),
+                    Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 570,
+                          margin: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(17.46),
+                            color: Colors.grey.shade100,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 0.92,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16.54),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: Image.asset(
-                            selectedVariant.imageAsset,
-                            key: ValueKey(selectedVariant.imageAsset),
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: Colors.grey.shade200,
-                              child: const Center(
-                                child: Icon(Icons.person, size: 96, color: Colors.grey),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16.54),
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: Image.asset(
+                                selectedVariant.imageAsset,
+                                key: ValueKey(selectedVariant.imageAsset),
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  color: Colors.grey.shade200,
+                                  child: const Center(
+                                    child: Icon(Icons.person, size: 96, color: Colors.grey),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+
+                        // Top-Right Floating Heart Button Overlay
+                        Positioned(
+                          top: 26,
+                          right: 32,
+                          child: ListenableBuilder(
+                            listenable: WishlistController(),
+                            builder: (context, _) {
+                              final isFav = WishlistController().isWishlisted(activeProduct.id);
+                              return GestureDetector(
+                                onTap: () {
+                                  final added = WishlistController().toggleWishlist(activeProduct);
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        added
+                                            ? '${activeProduct.title} added to Wishlist!'
+                                            : '${activeProduct.title} removed from Wishlist',
+                                      ),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white.withValues(alpha: 0.92),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.12),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      isFav ? Icons.favorite : Icons.favorite_border,
+                                      size: 22,
+                                      color: isFav ? const Color(0xFFFF2B2B) : Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
 
                     // EXACT FIGMA SPEC: Color Selector Outer Section Container (Frame 1261154814: Width 401px, Height 169px, Gap 16px, Left 18px)
@@ -1241,12 +1318,29 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                         height: 45,
                         child: OutlinedButton.icon(
                           onPressed: () {
+                            final cartItem = CartItemModel(
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
+                              title: widget.product?.title ?? "Pinkmint Men's Solid Shirt | Soft Cotton Blend",
+                              sizeText: 'Size: $_selectedSize | Color: ${selectedVariant.colorName}',
+                              imageAsset: selectedVariant.imageAsset,
+                              rating: '4.8',
+                              deliveryDate: 'Delivery by Thu, 25 Jul',
+                              price: selectedVariant.price,
+                              originalPrice: 1999,
+                              quantity: 1,
+                            );
+                            CartController().addItem(cartItem);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
                                   'Added ${selectedVariant.colorName} shirt (Size $_selectedSize) to Cart!',
                                 ),
                                 backgroundColor: AppColors.menPrimaryBlue,
+                                action: SnackBarAction(
+                                  label: 'VIEW CART',
+                                  textColor: Colors.white,
+                                  onPressed: () => context.push(RouteNames.cartPath),
+                                ),
                               ),
                             );
                           },
@@ -1284,12 +1378,19 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                         height: 45,
                         child: ElevatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Proceeding to Checkout!'),
-                                backgroundColor: AppColors.menPrimaryBlue,
-                              ),
+                            final cartItem = CartItemModel(
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
+                              title: widget.product?.title ?? "Pinkmint Men's Solid Shirt | Soft Cotton Blend",
+                              sizeText: 'Size: $_selectedSize | Color: ${selectedVariant.colorName}',
+                              imageAsset: selectedVariant.imageAsset,
+                              rating: '4.8',
+                              deliveryDate: 'Delivery by Thu, 25 Jul',
+                              price: selectedVariant.price,
+                              originalPrice: 1999,
+                              quantity: 1,
                             );
+                            CartController().addItem(cartItem);
+                            context.push(RouteNames.cartPath);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.menPrimaryBlue,
@@ -1313,6 +1414,7 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),

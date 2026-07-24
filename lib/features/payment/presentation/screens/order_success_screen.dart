@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/routes/route_names.dart';
+
 
 class OrderSuccessScreen extends StatelessWidget {
   const OrderSuccessScreen({super.key});
@@ -138,35 +140,64 @@ class OrderSuccessScreen extends StatelessWidget {
 
             const Spacer(),
 
-            // EXACT FIGMA SPEC: Frame 49 Bottom Button (Width 367px, Height 45px, Radius 5px, Solid Royal Blue #4D43FE, "Continue to Shopping")
             Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: SizedBox(
-                width: 367,
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.go('/');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.menPrimaryBlue,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+              padding: const EdgeInsets.only(bottom: 30, left: 19, right: 19),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.go(RouteNames.homePath);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.menPrimaryBlue,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: const Text(
+                        'Continue to Shopping',
+                        style: TextStyle(
+                          fontFamily: 'AnekLatin',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    'Continue to Shopping',
-                    style: TextStyle(
-                      fontFamily: 'AnekLatin',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        context.push(RouteNames.myOrderPath);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.menPrimaryBlue, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      child: const Text(
+                        'View My Orders',
+                        style: TextStyle(
+                          fontFamily: 'AnekLatin',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.menPrimaryBlue,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
+
           ],
         ),
       ),

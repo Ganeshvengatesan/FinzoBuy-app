@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../data/models/product_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
+
 
 class TopDealsSection extends StatelessWidget {
   final List<ProductModel> dealCategories;
@@ -50,7 +53,7 @@ class TopDealsSection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => context.push(RouteNames.menFashionPath),
                 child: Row(
                   children: [
                     Text(
@@ -106,7 +109,10 @@ class TopDealsSection extends StatelessWidget {
     bool isDarkMode,
     ThemeData theme,
   ) {
-    return Container(
+    return GestureDetector(
+      onTap: () => context.push(RouteNames.menFashionPath),
+      behavior: HitTestBehavior.opaque,
+      child: Container(
       decoration: BoxDecoration(
         color: isDarkMode ? theme.cardTheme.color : Colors.white,
         borderRadius: AppSizes.br12,
@@ -163,6 +169,7 @@ class TopDealsSection extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

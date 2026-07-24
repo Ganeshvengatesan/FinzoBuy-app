@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
+
 
 class PromoCarousel extends StatefulWidget {
   const PromoCarousel({super.key});
@@ -66,10 +69,13 @@ class _PromoCarouselState extends State<PromoCarousel> {
             },
             itemCount: _banners.length,
             itemBuilder: (context, index) {
-              return Image.asset(
-                _banners[index],
-                fit: BoxFit.cover,
-                width: double.infinity,
+              return GestureDetector(
+                onTap: () => context.push(RouteNames.menFashionDetailPath),
+                child: Image.asset(
+                  _banners[index],
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                ),
               );
             },
           ),

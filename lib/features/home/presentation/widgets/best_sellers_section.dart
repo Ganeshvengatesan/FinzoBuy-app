@@ -3,6 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../data/models/product_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
+
 
 class BestSellersSection extends StatelessWidget {
   final List<ProductModel> products;
@@ -34,7 +37,7 @@ class BestSellersSection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => context.push(RouteNames.menFashionPath),
                 child: Row(
                   children: [
                     Text(
@@ -88,9 +91,12 @@ class BestSellersSection extends StatelessWidget {
     BuildContext context,
     ProductModel product,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return GestureDetector(
+      onTap: () => context.push(RouteNames.menFashionDetailPath),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         // 1. Image Container (White Card Box for image only)
         Container(
           width: 140,
@@ -209,6 +215,7 @@ class BestSellersSection extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 }

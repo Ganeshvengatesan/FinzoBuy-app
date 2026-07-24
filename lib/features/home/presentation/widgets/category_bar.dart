@@ -36,9 +36,7 @@ class CategoryBar extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 onCategorySelected(category.id);
-                if (category.name.toLowerCase().contains('fashion') || category.id.contains('fashion')) {
-                  context.push(RouteNames.menFashionPath);
-                }
+                context.push(RouteNames.menFashionPath);
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

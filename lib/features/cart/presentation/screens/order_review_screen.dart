@@ -96,6 +96,7 @@ class _OrderReviewScreenState extends State<OrderReviewScreen> {
                               quantity: item.quantity,
                               onDecrement: () => _cartController.decrementQuantity(item.id),
                               onIncrement: () => _cartController.incrementQuantity(item.id),
+                              onRemove: () => _cartController.removeItem(item.id),
                             );
                           },
                         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/men_product_model.dart';
+import '../../../profile/controllers/wishlist_controller.dart';
+
 
 class MenProductCard extends StatefulWidget {
   final MenProductModel product;
@@ -24,7 +26,7 @@ class _MenProductCardState extends State<MenProductCard> {
   @override
   void initState() {
     super.initState();
-    _isFav = widget.product.isFavorite;
+    _isFav = WishlistController().isWishlisted(widget.product.id) || widget.product.isFavorite;
   }
 
   @override
@@ -75,10 +77,22 @@ class _MenProductCardState extends State<MenProductCard> {
                     right: 8,
                     child: GestureDetector(
                       onTap: () {
+                        final added = WishlistController().toggleWishlist(widget.product);
                         setState(() {
-                          _isFav = !_isFav;
+                          _isFav = added;
                         });
-                        widget.onFavoriteToggle?.call(_isFav);
+                        widget.onFavoriteToggle?.call(added);
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              added
+                                  ? '${widget.product.title} added to Wishlist!'
+                                  : '${widget.product.title} removed from Wishlist',
+                            ),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
                       },
                       child: Container(
                         padding: const EdgeInsets.all(5),

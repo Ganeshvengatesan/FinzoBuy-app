@@ -173,6 +173,7 @@ class _SelectPaymentMethodScreenState extends State<SelectPaymentMethodScreen> {
                         height: 45,
                         child: ElevatedButton(
                           onPressed: () {
+                            _cartController.clearCart();
                             context.push(RouteNames.orderSuccessPath);
                           },
                           style: ElevatedButton.styleFrom(

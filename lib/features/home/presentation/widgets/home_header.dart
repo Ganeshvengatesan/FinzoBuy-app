@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
 import '../../../search/presentation/screens/search_screen.dart';
+
 import '../../data/services/location_service.dart';
 import 'location_bottom_sheet.dart';
 
@@ -215,7 +218,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                           BlendMode.srcIn,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () => context.push(RouteNames.notificationsPath),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
                     ),
@@ -247,7 +250,7 @@ class _HomeHeaderState extends State<HomeHeader> {
                       BlendMode.srcIn,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () => context.push(RouteNames.profileMenuPath),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
                 ),

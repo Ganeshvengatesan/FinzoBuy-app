@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../data/models/product_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
+
 
 class TechDealsSection extends StatelessWidget {
   final List<ProductModel> techProducts;
@@ -73,9 +76,12 @@ class TechDealsSection extends StatelessWidget {
             ? 'assets/images/tech_2.png'
             : 'assets/images/tech_3.png';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return GestureDetector(
+      onTap: () => context.push(RouteNames.menFashionDetailPath),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         // 1. Image Container (White Card Box for image only)
         Container(
           width: 130,
@@ -145,6 +151,7 @@ class TechDealsSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 }

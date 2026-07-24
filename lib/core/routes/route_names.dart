@@ -48,5 +48,20 @@ class RouteNames {
   static const String paymentMethodPath = '/payment-method';
   static const String orderSuccess = 'orderSuccess';
   static const String orderSuccessPath = '/order-success';
+
+  static const String profileMenu = 'profileMenu';
+  static const String profileMenuPath = '/profile-menu';
+
+  static const String myProfile = 'myProfile';
+  static const String myProfilePath = '/my-profile';
+
+  static const String wishlist = 'wishlist';
+  static const String wishlistPath = '/wishlist';
+
+  static const String notifications = 'notifications';
+  static const String notificationsPath = '/notifications';
+
+  static const String termsAndConditions = 'termsAndConditions';
+  static const String termsAndConditionsPath = '/terms-and-conditions';
 }
 

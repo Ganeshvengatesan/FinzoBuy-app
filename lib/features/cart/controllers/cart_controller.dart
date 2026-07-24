@@ -32,7 +32,7 @@ class CartController extends ChangeNotifier {
     ),
   ];
 
-  List<CartItemModel> get items => List.unmodifiable(_items);
+  List<CartItemModel> get items => List<CartItemModel>.from(_items);
 
   OrderSummaryModel get summary {
     double totalMrp = 0;
@@ -52,7 +52,24 @@ class CartController extends ChangeNotifier {
     for (var item in _items) {
       total += item.price * item.quantity;
     }
-    return total > 0 ? total : 409;
+    return total;
+  }
+
+  void addItem(CartItemModel item) {
+    final existingIndex = _items.indexWhere(
+      (i) => i.title == item.title && i.sizeText == item.sizeText,
+    );
+    if (existingIndex != -1) {
+      _items[existingIndex].quantity += item.quantity;
+    } else {
+      _items.add(item);
+    }
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
   }
 
   void incrementQuantity(String id) {
@@ -76,3 +93,4 @@ class CartController extends ChangeNotifier {
     notifyListeners();
   }
 }
+

@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/get_started_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/profile/presentation/screens/profile_menu_screen.dart';
+import '../../features/profile/presentation/screens/my_profile_screen.dart';
+import '../../features/profile/presentation/screens/wishlist_screen.dart';
+import '../../features/profile/presentation/screens/notifications_screen.dart';
+import '../../features/profile/presentation/screens/terms_and_conditions_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+
+
+
+
 import '../../features/men_fashion/presentation/screens/men_fashion_screen.dart';
 import '../../features/men_fashion/presentation/screens/men_fashion_detail_screen.dart';
 import '../../features/men_fashion/data/models/men_product_model.dart';
@@ -136,7 +145,7 @@ class AppRouter {
         path: RouteNames.trackOrderPath,
         builder: (context, state) {
           final order = state.extra as OrderModel?;
-          return TrackOrderScreen(orderId: order?.id ?? '#3454545');
+          return TrackOrderScreen(orderId: order?.orderId ?? '#3454545');
         },
       ),
       GoRoute(
@@ -178,6 +187,31 @@ class AppRouter {
         name: RouteNames.orderSuccess,
         path: RouteNames.orderSuccessPath,
         builder: (context, state) => const OrderSuccessScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.profileMenu,
+        path: RouteNames.profileMenuPath,
+        builder: (context, state) => const ProfileMenuScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.myProfile,
+        path: RouteNames.myProfilePath,
+        builder: (context, state) => const MyProfileScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.wishlist,
+        path: RouteNames.wishlistPath,
+        builder: (context, state) => const WishlistScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.notifications,
+        path: RouteNames.notificationsPath,
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.termsAndConditions,
+        path: RouteNames.termsAndConditionsPath,
+        builder: (context, state) => const TermsAndConditionsScreen(),
       ),
     ],
   );

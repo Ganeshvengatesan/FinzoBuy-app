@@ -3,6 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../data/models/product_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
+
 
 class RecentlyViewedSection extends StatelessWidget {
   final List<ProductModel> products;
@@ -34,7 +37,7 @@ class RecentlyViewedSection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => context.push(RouteNames.menFashionPath),
                 child: Row(
                   children: [
                     Text(
@@ -87,7 +90,10 @@ class RecentlyViewedSection extends StatelessWidget {
     ProductModel product,
     ThemeData theme,
   ) {
-    return Column(
+    return GestureDetector(
+      onTap: () => context.push(RouteNames.menFashionDetailPath),
+      behavior: HitTestBehavior.opaque,
+      child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 1. Outer Card Container (Contains image and overlay grid/text only)
@@ -207,12 +213,13 @@ class RecentlyViewedSection extends StatelessWidget {
                 fontSize: 14.0,
                 height: 1.0,
                 letterSpacing: 0.0,
-                color: AppColors.lightPrimary, // Brand color #4D43FE
+                  color: AppColors.lightPrimary, // Brand color #4D43FE
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
