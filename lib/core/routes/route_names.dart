@@ -1,8 +1,14 @@
 class RouteNames {
   RouteNames._();
 
+  static const String getStarted = 'getStarted';
+  static const String getStartedPath = '/get-started';
+
+  static const String login = 'login';
+  static const String loginPath = '/login';
+
   static const String home = 'home';
-  static const String homePath = '/';
+  static const String homePath = '/home';
   
   // Men Fashion routes
   static const String menFashion = 'menFashion';

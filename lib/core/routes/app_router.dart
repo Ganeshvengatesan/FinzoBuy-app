@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/screens/get_started_screen.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/men_fashion/presentation/screens/men_fashion_screen.dart';
 import '../../features/men_fashion/presentation/screens/men_fashion_detail_screen.dart';
@@ -23,7 +25,7 @@ class AppRouter {
   AppRouter._();
 
   static final GoRouter router = GoRouter(
-    initialLocation: RouteNames.homePath,
+    initialLocation: RouteNames.getStartedPath,
     debugLogDiagnostics: true,
     errorBuilder: (context, state) => Scaffold(
       body: Center(
@@ -32,9 +34,45 @@ class AppRouter {
     ),
     routes: [
       GoRoute(
+        name: RouteNames.getStarted,
+        path: RouteNames.getStartedPath,
+        builder: (context, state) => const GetStartedScreen(),
+      ),
+      GoRoute(
+        name: RouteNames.login,
+        path: RouteNames.loginPath,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOutCubic;
+            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      ),
+      GoRoute(
         name: RouteNames.home,
         path: RouteNames.homePath,
-        builder: (context, state) => const HomeScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const HomeScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOutCubic;
+            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
       ),
       GoRoute(
         name: RouteNames.menFashion,
@@ -96,7 +134,10 @@ class AppRouter {
       GoRoute(
         name: RouteNames.trackOrder,
         path: RouteNames.trackOrderPath,
-        builder: (context, state) => const TrackOrderScreen(),
+        builder: (context, state) {
+          final order = state.extra as OrderModel?;
+          return TrackOrderScreen(orderId: order?.id ?? '#3454545');
+        },
       ),
       GoRoute(
         name: RouteNames.writeReview,
@@ -138,15 +179,6 @@ class AppRouter {
         path: RouteNames.orderSuccessPath,
         builder: (context, state) => const OrderSuccessScreen(),
       ),
-      // Future routes can be registered here:
-      // GoRoute(
-      //   name: RouteNames.productDetails,
-      //   path: RouteNames.productDetailsPath,
-      //   builder: (context, state) {
-      //     final id = state.pathParameters['id']!;
-      //     return ProductDetailsScreen(productId: id);
-      //   },
-      // ),
     ],
   );
 }

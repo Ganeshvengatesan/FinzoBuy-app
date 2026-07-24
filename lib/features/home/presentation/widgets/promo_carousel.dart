@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
 class PromoCarousel extends StatefulWidget {
@@ -53,9 +54,9 @@ class _PromoCarouselState extends State<PromoCarousel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // PageView Banner
+        // PageView Banner (Height increased)
         SizedBox(
-          height: 200,
+          height: 225,
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -74,7 +75,7 @@ class _PromoCarouselState extends State<PromoCarousel> {
           ),
         ),
         AppSizes.hGap12,
-        // Hollow Circle Indicator Dots
+        // Sleek Minimalist Dot/Pill Indicator
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
@@ -83,16 +84,12 @@ class _PromoCarouselState extends State<PromoCarousel> {
               final isSelected = _currentIndex == index;
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                width: isSelected ? 32.0 : 10.0,
-                height: 10.0,
+                margin: const EdgeInsets.symmetric(horizontal: 3.5),
+                width: isSelected ? 22.0 : 6.0,
+                height: 6.0,
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF4D43FE) : Colors.white,
-                  borderRadius: BorderRadius.circular(5.0),
-                  border: Border.all(
-                    color: isSelected ? const Color(0xFF4D43FE) : const Color(0xFFCCD4FF),
-                    width: 1.5,
-                  ),
+                  color: isSelected ? AppColors.lightPrimary : const Color(0xFFE0E0E0),
+                  borderRadius: BorderRadius.circular(3.0),
                 ),
               );
             },
