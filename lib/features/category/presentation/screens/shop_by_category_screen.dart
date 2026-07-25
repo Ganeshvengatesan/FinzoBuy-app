@@ -7,6 +7,7 @@ import '../../domain/repositories/category_repository.dart';
 import '../controllers/category_controller.dart';
 import '../widgets/category_card.dart';
 import '../widgets/category_header.dart';
+import '../widgets/category_shimmer_loading.dart';
 
 class ShopByCategoryScreen extends StatefulWidget {
   final bool isEmbedded;
@@ -63,7 +64,7 @@ class _ShopByCategoryScreenState extends State<ShopByCategoryScreen> {
                 // Main Content
                 Expanded(
                   child: _controller.isLoading
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const CategoryShimmerLoading()
                       : _controller.errorMessage != null
                           ? Center(child: Text(_controller.errorMessage!))
                           : GridView.builder(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../category/presentation/widgets/category_header.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -17,91 +19,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
-      body: SafeArea(
-        child: Column(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF9FAFB),
+        body: Column(
           children: [
-            // EXACT FIGMA SPEC: Top Header Container (Rectangle 1632: Height 148px, Background #F4F3FF, Radius 30px, Border 1px #FFFFFF)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF4F3FF),
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(30),
-                ),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
-              ),
-              child: Column(
-                children: [
-                  // Top Status Bar (09:30 PM & Icons)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '09:30 PM',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.bluetooth, size: 16, color: Colors.black),
-                          SizedBox(width: 6),
-                          Icon(Icons.wifi, size: 16, color: Colors.black),
-                          SizedBox(width: 6),
-                          Icon(Icons.signal_cellular_alt, size: 16, color: Colors.black),
-                          SizedBox(width: 6),
-                          Icon(Icons.battery_full, size: 16, color: Colors.black),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Navigation Row: < Notifications & Search Icon
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (context.canPop()) {
-                            context.pop();
-                          }
-                        },
-                        child: const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Notifications',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black,
-                          fontFamily: 'AnekLatin',
-                        ),
-                      ),
-                      const Spacer(),
-                      const SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Icon(Icons.search, size: 24, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            CategoryHeader(
+              title: 'Notifications',
             ),
 
             // Main Settings Card Body

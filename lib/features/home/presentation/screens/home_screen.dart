@@ -54,19 +54,22 @@ class _HomeScreenState extends State<HomeScreen> {
         content: const Text(
           'Tap again to exit',
           textAlign: TextAlign.center,
+          maxLines: 1,
           style: TextStyle(
             fontFamily: 'AnekLatin',
-            fontSize: 14,
+            fontSize: 13.5,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
         ),
         behavior: SnackBarBehavior.floating,
+        elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
         ),
-        backgroundColor: const Color(0xFF1E1E1E),
-        margin: const EdgeInsets.only(bottom: 30, left: 80, right: 80),
+        backgroundColor: Colors.black.withValues(alpha: 0.80),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        width: 165,
         duration: const Duration(seconds: 2),
       ),
     );

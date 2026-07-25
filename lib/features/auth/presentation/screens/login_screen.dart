@@ -76,35 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Welcome Title & Subtitle
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightPrimary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: const Icon(
-                      Icons.shopping_bag_outlined,
-                      color: AppColors.lightPrimary,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'FINZO FASHION',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontFamily: 'AnekLatin',
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.2,
-                      color: AppColors.lightPrimary,
-                    ),
-                  ),
-                ],
-              ),
 
-              const SizedBox(height: 24),
 
               Text(
                 'Welcome Back 👋',

@@ -62,8 +62,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   }
 
   void _navigateToLogin() {
-    AuthService.setLoggedIn(true);
-    context.go(RouteNames.homePath);
+    context.push(RouteNames.loginPath);
   }
 
   @override
@@ -123,52 +122,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             ),
           ),
 
-          // 3. Top Brand Header / Logo
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(6.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.lightPrimary,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: const Icon(Icons.checkroom, color: Colors.white, size: 20),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'FINZO FASHION',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.5,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: _navigateToLogin,
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(
-                        fontFamily: 'AnekLatin',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+
 
           // 4. Bottom Content: Attractive Animated Copy, Page Indicators & Get Started Button
           Positioned(

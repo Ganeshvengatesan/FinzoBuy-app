@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
 import '../../data/models/category_model.dart';
 
@@ -16,8 +17,8 @@ class CategoryBar extends StatelessWidget {
     required this.onCategorySelected,
   });
 
-  // Softer Warm Charcoal Brown color token for active category background & text
-  static const Color activeDarkGreyBrown = Color(0xFF4A413D);
+  // Light theme primary blue color token for active category background & text
+  static const Color activePrimaryBlue = AppColors.menPrimaryBlue;
   static const Color inactiveCircleBg = Color(0xFFF3F3F5);
   static const Color inactiveIconColor = Color(0xFF555555);
   static const Color inactiveTextColor = Color(0xFF757575);
@@ -41,7 +42,7 @@ class CategoryBar extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Animated Circular Icon Container with Dark Grey-Brown Active Fill & Pure White Icon
+                  // Animated Circular Icon Container with Soft Light Blue Fill, Thin Grey Border & Crisp Primary Blue Icon
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 250),
                     curve: Curves.easeInOutCubic,
@@ -49,14 +50,18 @@ class CategoryBar extends StatelessWidget {
                     height: isSelected ? 58 : 54,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isSelected ? activeDarkGreyBrown : inactiveCircleBg,
+                      color: isSelected ? activePrimaryBlue.withValues(alpha: 0.12) : inactiveCircleBg,
+                      border: Border.all(
+                        color: isSelected ? const Color(0xFFD8D8E5) : const Color(0xFFE5E5E5),
+                        width: 1.0,
+                      ),
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: activeDarkGreyBrown.withValues(alpha: 0.28),
-                                blurRadius: 10,
-                                spreadRadius: 1,
-                                offset: const Offset(0, 4),
+                                color: activePrimaryBlue.withValues(alpha: 0.08),
+                                blurRadius: 6,
+                                spreadRadius: 0,
+                                offset: const Offset(0, 2),
                               )
                             ]
                           : [
@@ -68,23 +73,14 @@ class CategoryBar extends StatelessWidget {
                             ],
                     ),
                     child: Center(
-                      child: TweenAnimationBuilder<Color?>(
-                        tween: ColorTween(
-                          begin: isSelected ? inactiveIconColor : Colors.white,
-                          end: isSelected ? Colors.white : inactiveIconColor,
+                      child: SvgPicture.asset(
+                        category.iconPath,
+                        width: 24,
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                          isSelected ? activePrimaryBlue : inactiveIconColor,
+                          BlendMode.srcIn,
                         ),
-                        duration: const Duration(milliseconds: 250),
-                        builder: (context, color, child) {
-                          return SvgPicture.asset(
-                            category.iconPath,
-                            width: 24,
-                            height: 24,
-                            colorFilter: ColorFilter.mode(
-                              color ?? (isSelected ? Colors.white : inactiveIconColor),
-                              BlendMode.srcIn,
-                            ),
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -93,8 +89,8 @@ class CategoryBar extends StatelessWidget {
                   // Category Label with Smooth Color Transition
                   TweenAnimationBuilder<Color?>(
                     tween: ColorTween(
-                      begin: isSelected ? inactiveTextColor : activeDarkGreyBrown,
-                      end: isSelected ? activeDarkGreyBrown : inactiveTextColor,
+                      begin: isSelected ? inactiveTextColor : activePrimaryBlue,
+                      end: isSelected ? activePrimaryBlue : inactiveTextColor,
                     ),
                     duration: const Duration(milliseconds: 250),
                     builder: (context, color, child) {
@@ -103,7 +99,7 @@ class CategoryBar extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'AnekLatin',
                           fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: color ?? (isSelected ? activeDarkGreyBrown : inactiveTextColor),
+                          color: color ?? (isSelected ? activePrimaryBlue : inactiveTextColor),
                           fontSize: 12.0,
                         ),
                       );

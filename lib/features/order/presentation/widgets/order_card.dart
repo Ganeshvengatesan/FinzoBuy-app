@@ -76,19 +76,32 @@ class OrderCard extends StatelessWidget {
                   children: [
                     // Item Thumbnail
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(14.0),
-                      child: Image.network(
-                        item.imageUrl,
-                        width: 64.0,
-                        height: 64.0,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 64.0,
-                          height: 64.0,
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image_not_supported, color: Colors.grey),
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(6.0),
+                      child: item.imageUrl.startsWith('http')
+                          ? Image.network(
+                              item.imageUrl,
+                              width: 64.0,
+                              height: 64.0,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 64.0,
+                                height: 64.0,
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                              ),
+                            )
+                          : Image.asset(
+                              item.imageUrl,
+                              width: 64.0,
+                              height: 64.0,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Container(
+                                width: 64.0,
+                                height: 64.0,
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                              ),
+                            ),
                     ),
                     const SizedBox(width: 14.0),
 
