@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
+import '../../../../core/widgets/discrete_progress_indicator.dart';
+import '../../../category/presentation/widgets/category_header.dart';
 import '../../controllers/cart_controller.dart';
 import '../widgets/cart_item_card.dart';
 import '../widgets/order_summary_card.dart';
@@ -15,13 +18,19 @@ class MyCartScreen extends StatefulWidget {
 
 class _MyCartScreenState extends State<MyCartScreen> {
   final CartController _cartController = CartController();
+  bool _isExploring = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
-      body: SafeArea(
-        child: ListenableBuilder(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF9FAFB),
+        body: ListenableBuilder(
           listenable: _cartController,
           builder: (context, _) {
             final cartItems = _cartController.items;
@@ -29,172 +38,105 @@ class _MyCartScreenState extends State<MyCartScreen> {
 
             return Column(
               children: [
-                // Header Bar
-                Container(
-                  height: 48,
-                  padding: const EdgeInsets.symmetric(horizontal: 19),
-                  color: Colors.white,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (context.canPop()) {
-                            context.pop();
-                          }
-                        },
-                        child: const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'My Cart',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black,
-                          fontFamily: 'AnekLatin',
-                        ),
-                      ),
-                      const Spacer(),
-                      const SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Icon(Icons.search, size: 24, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Top Delivery Address Pill Container
-                Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 8),
-                  child: GestureDetector(
-                    onTap: () => context.push(RouteNames.selectAddressPath),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE8E7FF),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.home_outlined, size: 20, color: AppColors.menPrimaryBlue),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: RichText(
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              text: const TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Home ',
-                                    style: TextStyle(
-                                      fontFamily: 'AnekLatin',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xFF151515),
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Polt 4 White Avenue 1st Street...',
-                                    style: TextStyle(
-                                      fontFamily: 'AnekLatin',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(0xFF151515),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            width: 24,
-                            height: 24,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.menPrimaryBlue,
-                            ),
-                            child: const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 11,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                // Header Bar (Same style as Category Screen app bar)
+                CategoryHeader(
+                  title: 'My Cart',
+                  onBackTap: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    }
+                  },
                 ),
 
                 // Scrollable Cart Items List or Empty State
                 Expanded(
                   child: cartItems.isEmpty
                       ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.shopping_bag_outlined,
-                                size: 80,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(height: 16),
-                              const Text(
-                                'Your Cart is Empty',
-                                style: TextStyle(
-                                  fontFamily: 'AnekLatin',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/empty-cart.png',
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(
+                                      Icons.shopping_bag_outlined,
+                                      size: 100,
+                                      color: Colors.grey,
+                                    );
+                                  },
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Looks like you haven\'t added anything to your cart yet.',
-                                style: TextStyle(
-                                  fontFamily: 'AnekLatin',
-                                  fontSize: 14,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              ElevatedButton(
-                                onPressed: () {
-                                  if (context.canPop()) {
-                                    context.pop();
-                                  } else {
-                                    context.go(RouteNames.menFashionPath);
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.menPrimaryBlue,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Explore Products',
+                                const SizedBox(height: 20),
+                                const Text(
+                                  'Your Cart is Empty',
                                   style: TextStyle(
                                     fontFamily: 'AnekLatin',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF151515),
                                   ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Looks like you haven\'t added anything to your cart yet.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                SizedBox(
+                                  height: 42,
+                                  child: ElevatedButton(
+                                    onPressed: _isExploring
+                                        ? null
+                                        : () {
+                                            HapticFeedback.mediumImpact();
+                                            setState(() {
+                                              _isExploring = true;
+                                            });
+                                            Future.delayed(const Duration(milliseconds: 300), () {
+                                              if (mounted) {
+                                                if (context.canPop()) {
+                                                  context.pop();
+                                                } else {
+                                                  context.go(RouteNames.menFashionPath);
+                                                }
+                                              }
+                                            });
+                                          },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.menPrimaryBlue,
+                                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: _isExploring
+                                        ? const DiscreteProgressIndicator(color: Colors.white, size: 18)
+                                        : const Text(
+                                            'Explore Products',
+                                            style: TextStyle(
+                                              fontFamily: 'AnekLatin',
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       : SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
+                          padding: const EdgeInsets.only(left: 19, right: 19, top: 2, bottom: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -222,9 +164,9 @@ class _MyCartScreenState extends State<MyCartScreen> {
 
                               const SizedBox(height: 16),
 
-                              // Apply Coupon Outer Card (400px x 66px, #FFF6DB Soft Yellow)
+                              // Apply Coupon Outer Card
                               Container(
-                                width: 400,
+                                width: double.infinity,
                                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFFF8E7),
@@ -236,7 +178,6 @@ class _MyCartScreenState extends State<MyCartScreen> {
                                 ),
                                 child: Row(
                                   children: [
-                                    // Blue Square Icon Box with Discount Badge
                                     Container(
                                       width: 38,
                                       height: 38,
@@ -309,72 +250,73 @@ class _MyCartScreenState extends State<MyCartScreen> {
                         ),
                 ),
 
-                // Sticky Bottom Action Bar
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, -4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: 24,
-                        child: Text(
-                          '₹${_cartController.totalPrice.toStringAsFixed(0)}',
-                          style: const TextStyle(
-                            fontFamily: 'AnekLatin',
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.menPrimaryBlue,
-                            height: 1.0,
-                          ),
+                // Sticky Bottom Action Bar (Only shown when cart is not empty)
+                if (cartItems.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.08),
+                          blurRadius: 10,
+                          offset: const Offset(0, -4),
                         ),
-                      ),
-
-                      SizedBox(
-                        width: 193,
-                        height: 45,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            context.push(RouteNames.checkoutPath);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.menPrimaryBlue,
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          height: 24,
+                          child: Text(
+                            '₹${_cartController.totalPrice.toStringAsFixed(0)}',
+                            style: const TextStyle(
+                              fontFamily: 'AnekLatin',
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.menPrimaryBlue,
+                              height: 1.0,
                             ),
                           ),
-                          child: const SizedBox(
-                            width: 88,
-                            height: 20,
-                            child: Center(
-                              child: Text(
-                                'Place Order',
-                                style: TextStyle(
-                                  fontFamily: 'AnekLatin',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                  height: 1.0,
+                        ),
+
+                        SizedBox(
+                          width: 193,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              context.push(RouteNames.checkoutPath);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.menPrimaryBlue,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const SizedBox(
+                              width: 88,
+                              height: 20,
+                              child: Center(
+                                child: Text(
+                                  'Place Order',
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    height: 1.0,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
               ],
             );
           },

@@ -8,10 +8,6 @@ import '../../features/profile/presentation/screens/wishlist_screen.dart';
 import '../../features/profile/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/terms_and_conditions_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
-
-
-
-
 import '../../features/men_fashion/presentation/screens/men_fashion_screen.dart';
 import '../../features/men_fashion/presentation/screens/men_fashion_detail_screen.dart';
 import '../../features/men_fashion/data/models/men_product_model.dart';
@@ -28,13 +24,43 @@ import '../../features/address/presentation/screens/select_address_screen.dart';
 import '../../features/address/presentation/screens/add_address_screen.dart';
 import '../../features/payment/presentation/screens/select_payment_method_screen.dart';
 import '../../features/payment/presentation/screens/order_success_screen.dart';
+import '../../features/search/presentation/screens/search_screen.dart';
+import '../services/auth_service.dart';
 import 'route_names.dart';
 
 class AppRouter {
   AppRouter._();
 
+  static CustomTransitionPage<void> _buildSlidePage({
+    required GoRouterState state,
+    required Widget child,
+  }) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOutCubic;
+        final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   static final GoRouter router = GoRouter(
     initialLocation: RouteNames.getStartedPath,
+    redirect: (context, state) async {
+      final loggedIn = await AuthService.isLoggedIn();
+      final path = state.uri.toString();
+      if (loggedIn && (path == RouteNames.getStartedPath || path == RouteNames.loginPath)) {
+        return RouteNames.homePath;
+      }
+      return null;
+    },
     debugLogDiagnostics: true,
     errorBuilder: (context, state) => Scaffold(
       body: Center(
@@ -45,60 +71,33 @@ class AppRouter {
       GoRoute(
         name: RouteNames.getStarted,
         path: RouteNames.getStartedPath,
-        builder: (context, state) => const GetStartedScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const GetStartedScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.login,
         path: RouteNames.loginPath,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
           child: const LoginScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOutCubic;
-            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
         ),
       ),
       GoRoute(
         name: RouteNames.home,
         path: RouteNames.homePath,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
           child: const HomeScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOutCubic;
-            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
         ),
       ),
       GoRoute(
         name: RouteNames.menFashion,
         path: RouteNames.menFashionPath,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
           child: const MenFashionScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.easeInOutCubic;
-            final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
         ),
       ),
       GoRoute(
@@ -106,112 +105,161 @@ class AppRouter {
         path: RouteNames.menFashionDetailPath,
         pageBuilder: (context, state) {
           final product = state.extra as MenProductModel?;
-          return CustomTransitionPage(
-            key: state.pageKey,
+          return _buildSlidePage(
+            state: state,
             child: MenFashionDetailScreen(product: product),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              const begin = Offset(1.0, 0.0);
-              const end = Offset.zero;
-              const curve = Curves.easeInOutCubic;
-              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
           );
         },
       ),
       GoRoute(
         name: RouteNames.category,
         path: RouteNames.categoryPath,
-        builder: (context, state) => const ShopByCategoryScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const ShopByCategoryScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.myOrder,
         path: RouteNames.myOrderPath,
-        builder: (context, state) => const MyOrderScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const MyOrderScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.orderDetails,
         path: RouteNames.orderDetailsPath,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final order = state.extra as OrderModel?;
-          return OrderDetailsScreen(order: order);
+          return _buildSlidePage(
+            state: state,
+            child: OrderDetailsScreen(order: order),
+          );
         },
       ),
       GoRoute(
         name: RouteNames.trackOrder,
         path: RouteNames.trackOrderPath,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final order = state.extra as OrderModel?;
-          return TrackOrderScreen(orderId: order?.orderId ?? '#3454545');
+          return _buildSlidePage(
+            state: state,
+            child: TrackOrderScreen(orderId: order?.orderId ?? '#3454545'),
+          );
         },
       ),
       GoRoute(
         name: RouteNames.writeReview,
         path: RouteNames.writeReviewPath,
-        builder: (context, state) => const WriteReviewScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const WriteReviewScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.productReviews,
         path: RouteNames.productReviewsPath,
-        builder: (context, state) => const ProductReviewsScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const ProductReviewsScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.cart,
         path: RouteNames.cartPath,
-        builder: (context, state) => const MyCartScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const MyCartScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.checkout,
         path: RouteNames.checkoutPath,
-        builder: (context, state) => const OrderReviewScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const OrderReviewScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.selectAddress,
         path: RouteNames.selectAddressPath,
-        builder: (context, state) => const SelectAddressScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const SelectAddressScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.addAddress,
         path: RouteNames.addAddressPath,
-        builder: (context, state) => const AddAddressScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const AddAddressScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.paymentMethod,
         path: RouteNames.paymentMethodPath,
-        builder: (context, state) => const SelectPaymentMethodScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const SelectPaymentMethodScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.orderSuccess,
         path: RouteNames.orderSuccessPath,
-        builder: (context, state) => const OrderSuccessScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const OrderSuccessScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.profileMenu,
         path: RouteNames.profileMenuPath,
-        builder: (context, state) => const ProfileMenuScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const ProfileMenuScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.myProfile,
         path: RouteNames.myProfilePath,
-        builder: (context, state) => const MyProfileScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const MyProfileScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.wishlist,
         path: RouteNames.wishlistPath,
-        builder: (context, state) => const WishlistScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const WishlistScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.notifications,
         path: RouteNames.notificationsPath,
-        builder: (context, state) => const NotificationsScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const NotificationsScreen(),
+        ),
       ),
       GoRoute(
         name: RouteNames.termsAndConditions,
         path: RouteNames.termsAndConditionsPath,
-        builder: (context, state) => const TermsAndConditionsScreen(),
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const TermsAndConditionsScreen(),
+        ),
+      ),
+      GoRoute(
+        name: RouteNames.search,
+        path: RouteNames.searchPath,
+        pageBuilder: (context, state) => _buildSlidePage(
+          state: state,
+          child: const SearchScreen(),
+        ),
       ),
     ],
   );

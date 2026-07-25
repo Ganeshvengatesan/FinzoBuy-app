@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
+import '../../../../core/widgets/discrete_progress_indicator.dart';
 import '../../data/models/men_product_model.dart';
 import '../../../cart/controllers/cart_controller.dart';
 import '../../../cart/data/models/cart_item_model.dart';
@@ -23,6 +26,9 @@ class MenFashionDetailScreen extends StatefulWidget {
 class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
   late int _selectedColorIndex;
   String _selectedSize = '38';
+  bool _isAddingToCart = false;
+  bool _isAddedToCart = false;
+  bool _isBuyingNow = false;
 
   // 4 Color Swatches matching Figma specs
   static final List<MenColorVariant> defaultVariants = [
@@ -97,16 +103,22 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
             // EXACT FIGMA SPEC: Top Title Header Bar (Group 1000011089: Width 400px, Height 30px, Left 19px)
             Container(
               height: 48,
-              padding: const EdgeInsets.symmetric(horizontal: 19),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               color: Colors.white,
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () => context.pop(),
+                    onTap: () {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go(RouteNames.homePath);
+                      }
+                    },
                     child: const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
+                      width: 28,
+                      height: 28,
+                      child: Icon(Icons.chevron_left, size: 28, color: Color(0xFF151515)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -114,25 +126,74 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                     'Men Fashion',
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF151515),
                       fontFamily: 'AnekLatin',
                     ),
                   ),
                   const Spacer(),
-                  const SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: Icon(Icons.search, size: 24, color: Colors.black),
-                  ),
-                  const SizedBox(width: 12),
                   GestureDetector(
-                    onTap: () => context.push(RouteNames.cartPath),
-                    child: const SizedBox(
+                    onTap: () => context.push(RouteNames.searchPath),
+                    child: SizedBox(
                       width: 30,
                       height: 30,
-                      child: Icon(Icons.shopping_cart_outlined, size: 24, color: Colors.black),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/icons/ic_search.svg',
+                          width: 22,
+                          height: 22,
+                          colorFilter: const ColorFilter.mode(Color(0xFF151515), BlendMode.srcIn),
+                        ),
+                      ),
                     ),
+                  ),
+                  const SizedBox(width: 12),
+                  ListenableBuilder(
+                    listenable: CartController(),
+                    builder: (context, _) {
+                      final count = CartController().itemCount;
+                      return GestureDetector(
+                        onTap: () => context.push(RouteNames.cartPath),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/icons/ic_cart.svg',
+                                  width: 22,
+                                  height: 22,
+                                  colorFilter: const ColorFilter.mode(Color(0xFF151515), BlendMode.srcIn),
+                                ),
+                              ),
+                            ),
+                            if (count > 0)
+                              Positioned(
+                                right: -4,
+                                top: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.menPrimaryBlue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    '$count',
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.white,
+                                      height: 1.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -197,18 +258,8 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                               final isFav = WishlistController().isWishlisted(activeProduct.id);
                               return GestureDetector(
                                 onTap: () {
-                                  final added = WishlistController().toggleWishlist(activeProduct);
-                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        added
-                                            ? '${activeProduct.title} added to Wishlist!'
-                                            : '${activeProduct.title} removed from Wishlist',
-                                      ),
-                                      duration: const Duration(seconds: 2),
-                                    ),
-                                  );
+                                  HapticFeedback.lightImpact();
+                                  WishlistController().toggleWishlist(activeProduct);
                                 },
                                 child: Container(
                                   width: 40,
@@ -1316,57 +1367,83 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                     Expanded(
                       child: SizedBox(
                         height: 45,
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            final cartItem = CartItemModel(
-                              id: DateTime.now().millisecondsSinceEpoch.toString(),
-                              title: widget.product?.title ?? "Pinkmint Men's Solid Shirt | Soft Cotton Blend",
-                              sizeText: 'Size: $_selectedSize | Color: ${selectedVariant.colorName}',
-                              imageAsset: selectedVariant.imageAsset,
-                              rating: '4.8',
-                              deliveryDate: 'Delivery by Thu, 25 Jul',
-                              price: selectedVariant.price,
-                              originalPrice: 1999,
-                              quantity: 1,
-                            );
-                            CartController().addItem(cartItem);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Added ${selectedVariant.colorName} shirt (Size $_selectedSize) to Cart!',
-                                ),
-                                backgroundColor: AppColors.menPrimaryBlue,
-                                action: SnackBarAction(
-                                  label: 'VIEW CART',
-                                  textColor: Colors.white,
-                                  onPressed: () => context.push(RouteNames.cartPath),
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: Icon(Icons.shopping_cart_outlined, size: 20, color: AppColors.menPrimaryBlue),
-                          ),
-                          label: const Text(
-                            'Add to Cart',
-                            style: TextStyle(
-                              fontFamily: 'AnekLatin',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.menPrimaryBlue,
-                              height: 1.0,
-                            ),
-                          ),
+                        child: OutlinedButton(
+                          onPressed: (_isAddingToCart || _isBuyingNow)
+                              ? null
+                              : () {
+                                  HapticFeedback.vibrate();
+                                  setState(() {
+                                    _isAddingToCart = true;
+                                  });
+                                  Future.delayed(const Duration(milliseconds: 300), () {
+                                    final cartItem = CartItemModel(
+                                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                      title: widget.product?.title ?? "Pinkmint Men's Solid Shirt | Soft Cotton Blend",
+                                      sizeText: 'Size: $_selectedSize | Color: ${selectedVariant.colorName}',
+                                      imageAsset: selectedVariant.imageAsset,
+                                      rating: '4.8',
+                                      deliveryDate: 'Delivery by Thu, 25 Jul',
+                                      price: selectedVariant.price,
+                                      originalPrice: 1999,
+                                      quantity: 1,
+                                    );
+                                    CartController().addItem(cartItem);
+                                    if (mounted) {
+                                      setState(() {
+                                        _isAddingToCart = false;
+                                        _isAddedToCart = true;
+                                      });
+                                    }
+                                  });
+                                },
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: const BorderSide(color: Color(0xFFC5C5C5), width: 1.0),
+                            backgroundColor: _isAddedToCart ? AppColors.menPrimaryBlue : Colors.white,
+                            side: BorderSide(
+                              color: _isAddedToCart ? AppColors.menPrimaryBlue : const Color(0xFFC5C5C5),
+                              width: 1.0,
+                            ),
                             padding: EdgeInsets.zero,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
+                          child: _isAddingToCart
+                              ? const DiscreteProgressIndicator(color: AppColors.menPrimaryBlue, size: 18)
+                              : _isAddedToCart
+                                  ? const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.check_circle_rounded, size: 18, color: Colors.white),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Added to Cart',
+                                          style: TextStyle(
+                                            fontFamily: 'AnekLatin',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                            height: 1.0,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.shopping_cart_outlined, size: 18, color: AppColors.menPrimaryBlue),
+                                        SizedBox(width: 6),
+                                        Text(
+                                          'Add to Cart',
+                                          style: TextStyle(
+                                            fontFamily: 'AnekLatin',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.menPrimaryBlue,
+                                            height: 1.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                         ),
                       ),
                     ),
@@ -1377,21 +1454,34 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                       child: SizedBox(
                         height: 45,
                         child: ElevatedButton(
-                          onPressed: () {
-                            final cartItem = CartItemModel(
-                              id: DateTime.now().millisecondsSinceEpoch.toString(),
-                              title: widget.product?.title ?? "Pinkmint Men's Solid Shirt | Soft Cotton Blend",
-                              sizeText: 'Size: $_selectedSize | Color: ${selectedVariant.colorName}',
-                              imageAsset: selectedVariant.imageAsset,
-                              rating: '4.8',
-                              deliveryDate: 'Delivery by Thu, 25 Jul',
-                              price: selectedVariant.price,
-                              originalPrice: 1999,
-                              quantity: 1,
-                            );
-                            CartController().addItem(cartItem);
-                            context.push(RouteNames.cartPath);
-                          },
+                          onPressed: (_isAddingToCart || _isBuyingNow)
+                              ? null
+                              : () {
+                                  HapticFeedback.vibrate();
+                                  setState(() {
+                                    _isBuyingNow = true;
+                                  });
+                                  Future.delayed(const Duration(milliseconds: 300), () {
+                                    final cartItem = CartItemModel(
+                                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                      title: widget.product?.title ?? "Pinkmint Men's Solid Shirt | Soft Cotton Blend",
+                                      sizeText: 'Size: $_selectedSize | Color: ${selectedVariant.colorName}',
+                                      imageAsset: selectedVariant.imageAsset,
+                                      rating: '4.8',
+                                      deliveryDate: 'Delivery by Thu, 25 Jul',
+                                      price: selectedVariant.price,
+                                      originalPrice: 1999,
+                                      quantity: 1,
+                                    );
+                                    CartController().addItem(cartItem);
+                                    if (mounted) {
+                                      setState(() {
+                                        _isBuyingNow = false;
+                                      });
+                                      context.push(RouteNames.cartPath);
+                                    }
+                                  });
+                                },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.menPrimaryBlue,
                             foregroundColor: Colors.white,
@@ -1401,16 +1491,18 @@ class _MenFashionDetailScreenState extends State<MenFashionDetailScreen> {
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
-                            'Buy Now',
-                            style: TextStyle(
-                              fontFamily: 'AnekLatin',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                              height: 1.0,
-                            ),
-                          ),
+                          child: _isBuyingNow
+                              ? const DiscreteProgressIndicator(color: Colors.white, size: 18)
+                              : const Text(
+                                  'Buy Now',
+                                  style: TextStyle(
+                                    fontFamily: 'AnekLatin',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    height: 1.0,
+                                  ),
+                                ),
                         ),
                       ),
                     ),

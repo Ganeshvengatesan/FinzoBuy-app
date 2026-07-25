@@ -50,31 +50,45 @@ class CategoryCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(19.0),
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: Image.network(
-                      category.imageUrl,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(
-                            Icons.image_not_supported_outlined,
-                            color: Colors.grey,
-                            size: 32,
+                    child: category.imageUrl.startsWith('http')
+                        ? Image.network(
+                            category.imageUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: Colors.grey,
+                                  size: 32,
+                                ),
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return const Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.asset(
+                            category.imageUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: Colors.grey,
+                                  size: 32,
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
                   ),
                 ),
               ),

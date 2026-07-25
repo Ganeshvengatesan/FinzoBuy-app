@@ -12,9 +12,10 @@ import '../widgets/spotlight_section.dart';
 import '../widgets/tech_deals_section.dart';
 import '../widgets/ai_banner_section.dart';
 import '../widgets/best_sellers_section.dart';
+import '../widgets/home_shimmer_loading.dart';
 import '../widgets/fashion_bottom_nav_bar.dart';
 import '../../../category/presentation/screens/shop_by_category_screen.dart';
-import '../../../order/presentation/screens/my_order_screen.dart';
+import '../../../profile/presentation/screens/profile_menu_screen.dart';
 import '../../../cart/presentation/screens/my_cart_screen.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
@@ -44,6 +45,33 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  DateTime? _lastBackPressTime;
+
+  void _showExitToast() {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          'Tap again to exit',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'AnekLatin',
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: const Color(0xFF1E1E1E),
+        margin: const EdgeInsets.only(bottom: 30, left: 80, right: 80),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -59,10 +87,27 @@ class _HomeScreenState extends State<HomeScreen> {
     return ListenableBuilder(
       listenable: _controller,
       builder: (context, child) {
-        return Scaffold(
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (_controller.currentNavIndex != 0) {
+              _controller.setNavIndex(0);
+              return;
+            }
+            final now = DateTime.now();
+            if (_lastBackPressTime == null ||
+                now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
+              _lastBackPressTime = now;
+              _showExitToast();
+            } else {
+              SystemNavigator.pop();
+            }
+          },
+          child: Scaffold(
           backgroundColor: Colors.white,
           body: _controller.isLoading
-              ? const SafeArea(child: Center(child: CircularProgressIndicator()))
+              ? const HomeShimmerLoading()
               : _controller.errorMessage != null
                   ? SafeArea(child: _buildErrorState(theme))
                   : _controller.currentNavIndex == 1
@@ -73,9 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : _controller.currentNavIndex == 2
                           ? const MyCartScreen()
                           : _controller.currentNavIndex == 3
-                              ? MyOrderScreen(
-                                  onBackTap: () => _controller.setNavIndex(0),
-                                )
+                              ? const ProfileMenuScreen()
                               : Stack(
                                   children: [
                                     // Full-bleed top gradient starting behind status bar
@@ -169,8 +212,9 @@ class _HomeScreenState extends State<HomeScreen> {
             currentIndex: _controller.currentNavIndex,
             onTap: _controller.setNavIndex,
           ),
-        );
-      },
+        ),
+      );
+    },
     );
   }
 

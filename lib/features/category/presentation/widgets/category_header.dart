@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
 
 class CategoryHeader extends StatelessWidget {
+  final String title;
   final VoidCallback? onBackTap;
   final VoidCallback? onSearchTap;
 
   const CategoryHeader({
     super.key,
+    this.title = 'Shop by Categories',
     this.onBackTap,
     this.onSearchTap,
   });
@@ -18,29 +22,19 @@ class CategoryHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
-        top: topPadding + 14.0,
-        bottom: 16.0,
+        top: topPadding + 10.0,
+        bottom: 12.0,
         left: 16.0,
         right: 16.0,
       ),
       decoration: const BoxDecoration(
-        color: Color(0xFFF4F3FF), // Figma header background #F4F3FF
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30.0),
-          bottomRight: Radius.circular(30.0),
-        ),
+        color: Colors.white,
         border: Border(
-          left: BorderSide(color: Colors.white, width: 1.0),
-          right: BorderSide(color: Colors.white, width: 1.0),
-          bottom: BorderSide(color: Colors.white, width: 1.0),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x0A000000),
-            blurRadius: 8,
-            offset: Offset(0, 2),
+          bottom: BorderSide(
+            color: Color(0xFFE5E7EB),
+            width: 1.0,
           ),
-        ],
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,8 +43,8 @@ class CategoryHeader extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: onBackTap ?? () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
+                  if (context.canPop()) {
+                    context.pop();
                   }
                 },
                 behavior: HitTestBehavior.opaque,
@@ -63,21 +57,21 @@ class CategoryHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              const Text(
-                'Shop by Categories',
-                style: TextStyle(
+              Text(
+                title,
+                style: const TextStyle(
                   fontFamily: 'AnekLatin',
-                  fontWeight: FontWeight.w700, // 700 Bold per Figma
-                  fontSize: 22.0, // 22px per Figma
+                  fontWeight: FontWeight.w700,
+                  fontSize: 22.0,
                   height: 1.0,
                   letterSpacing: 0.0,
-                  color: Color(0xFF151515), // #151515 per Figma
+                  color: Color(0xFF151515),
                 ),
               ),
             ],
           ),
           GestureDetector(
-            onTap: onSearchTap ?? () {},
+            onTap: onSearchTap ?? () => context.push(RouteNames.searchPath),
             behavior: HitTestBehavior.opaque,
             child: SizedBox(
               width: 30.0,
@@ -100,4 +94,3 @@ class CategoryHeader extends StatelessWidget {
     );
   }
 }
-

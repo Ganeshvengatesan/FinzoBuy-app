@@ -1,145 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
+import '../../../../core/services/auth_service.dart';
+import '../../../../core/widgets/discrete_progress_indicator.dart';
+import '../../../category/presentation/widgets/category_header.dart';
 
-class ProfileMenuScreen extends StatelessWidget {
+class ProfileMenuScreen extends StatefulWidget {
   const ProfileMenuScreen({super.key});
 
   @override
+  State<ProfileMenuScreen> createState() => _ProfileMenuScreenState();
+}
+
+class _ProfileMenuScreenState extends State<ProfileMenuScreen> {
+  bool _isLoggingOut = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF4F6FB),
-      body: SafeArea(
-        child: Column(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF4F6FB),
+        body: Column(
           children: [
-            // EXACT FIGMA SPEC: Top Header Container (Rectangle 1632: Height 148px, Background #F4F3FF, Radius 30px, Border 1px #FFFFFF)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF4F3FF),
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(30),
-                ),
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.0,
-                ),
-              ),
-              child: Column(
-                children: [
-                  // Top Status Indicator Row (09:30 PM & System Icons)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '09:30 PM',
-                        style: TextStyle(
-                          fontFamily: 'AnekLatin',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.bluetooth, size: 16, color: Colors.black),
-                          SizedBox(width: 6),
-                          Icon(Icons.wifi, size: 16, color: Colors.black),
-                          SizedBox(width: 6),
-                          Icon(Icons.signal_cellular_alt, size: 16, color: Colors.black),
-                          SizedBox(width: 6),
-                          Icon(Icons.battery_full, size: 16, color: Colors.black),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Deliver To Location + Notification Bell + Close Icon Header Row
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 22, color: Colors.black),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text(
-                              'Deliver to',
-                              style: TextStyle(
-                                fontFamily: 'AnekLatin',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xFF767676),
-                                height: 1.0,
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'Madurai-625006',
-                              style: TextStyle(
-                                fontFamily: 'AnekLatin',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                height: 1.1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Notification Bell Icon with Badge 0
-                      GestureDetector(
-                        onTap: () => context.push(RouteNames.notificationsPath),
-                        behavior: HitTestBehavior.opaque,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            const Icon(Icons.notifications_none_rounded, size: 24, color: Colors.black),
-                            Positioned(
-                              right: -2,
-                              top: -2,
-                              child: Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: const BoxDecoration(
-                                  color: AppColors.menPrimaryBlue,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Text(
-                                  '0',
-                                  style: TextStyle(
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
-                                    height: 1.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(width: 16),
-
-                      // Hamburger / Close Menu Icon
-                      GestureDetector(
-                        onTap: () {
-                          if (context.canPop()) {
-                            context.pop();
-                          }
-                        },
-                        child: const Icon(Icons.menu, size: 24, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            // Standard White App Bar
+            CategoryHeader(
+              title: 'Profile',
+              onBackTap: () {
+                if (context.canPop()) {
+                  context.pop();
+                }
+              },
             ),
 
             // Scrollable Content Body
@@ -342,9 +239,18 @@ class ProfileMenuScreen extends StatelessWidget {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () {
-                          context.go(RouteNames.loginPath);
-                        },
+                        onPressed: _isLoggingOut
+                            ? null
+                            : () async {
+                                HapticFeedback.mediumImpact();
+                                setState(() {
+                                  _isLoggingOut = true;
+                                });
+                                await AuthService.setLoggedIn(false);
+                                if (mounted) {
+                                  context.go(RouteNames.loginPath);
+                                }
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.menPrimaryBlue,
                           foregroundColor: Colors.white,
@@ -353,15 +259,17 @@ class ProfileMenuScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        child: const Text(
-                          'Logout',
-                          style: TextStyle(
-                            fontFamily: 'AnekLatin',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: _isLoggingOut
+                            ? const DiscreteProgressIndicator(color: Colors.white, size: 22)
+                            : const Text(
+                                'Logout',
+                                style: TextStyle(
+                                  fontFamily: 'AnekLatin',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
 

@@ -63,5 +63,8 @@ class RouteNames {
 
   static const String termsAndConditions = 'termsAndConditions';
   static const String termsAndConditionsPath = '/terms-and-conditions';
+
+  static const String search = 'search';
+  static const String searchPath = '/search';
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
 
@@ -26,7 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoadingGoogle = true;
     });
     // Simulate brief login check & navigate directly to Home Screen
-    Future.delayed(const Duration(milliseconds: 600), () {
+    Future.delayed(const Duration(milliseconds: 600), () async {
+      await AuthService.setLoggedIn(true);
       if (mounted) {
         setState(() {
           _isLoadingGoogle = false;
@@ -36,23 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _onContinueAsGuest() {
-    context.go(RouteNames.homePath);
+  void _onContinueAsGuest() async {
+    await AuthService.setLoggedIn(true);
+    if (mounted) {
+      context.go(RouteNames.homePath);
+    }
   }
 
-  void _onSendOtp() {
+  void _onSendOtp() async {
     final phone = _phoneController.text.trim();
     if (phone.length < 10) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid 10-digit mobile number'),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
       return;
     }
-    // Navigate to Home as guest / logged in user
-    context.go(RouteNames.homePath);
+    await AuthService.setLoggedIn(true);
+    if (mounted) {
+      context.go(RouteNames.homePath);
+    }
   }
 
   @override

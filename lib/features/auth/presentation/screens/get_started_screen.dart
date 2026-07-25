@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
 
@@ -61,7 +62,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   }
 
   void _navigateToLogin() {
-    context.push(RouteNames.loginPath);
+    AuthService.setLoggedIn(true);
+    context.go(RouteNames.homePath);
   }
 
   @override

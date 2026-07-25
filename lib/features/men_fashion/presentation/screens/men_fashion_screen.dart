@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/routes/route_names.dart';
+import '../../../category/presentation/widgets/category_header.dart';
 import '../widgets/men_category_bar.dart';
 import '../widgets/men_hero_banner.dart';
 import '../widgets/men_product_card.dart';
@@ -178,61 +180,35 @@ class _MenFashionScreenState extends State<MenFashionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // SECTION 1: Header Box (#F4F3FF background, rounded bottom corners)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: const BoxDecoration(
-                  color: AppColors.menHeaderBg,
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(30),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 20,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        if (context.canPop()) {
-                          context.pop();
-                        }
-                      },
-                    ),
-                    const SizedBox(width: 4),
-                    const Text(
-                      'Men Fashion',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black,
-                        fontFamily: 'AnekLatin',
-                      ),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.search,
-                        size: 26,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            // SECTION 1: Header (Same style as Category Screen)
+            CategoryHeader(
+              title: "Men's Fashion",
+              onBackTap: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(RouteNames.homePath);
+                }
+              },
+              onSearchTap: () => context.push(RouteNames.searchPath),
+            ),
 
-              const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
 
               // SECTION 2: Category Bar (Formal Wear, Casual Wear, Luggage, Watches, Footwear)
               MenCategoryBar(
@@ -561,6 +537,9 @@ class _MenFashionScreenState extends State<MenFashionScreen> {
           ),
         ),
       ),
-    );
-  }
+    ],
+  ),
+),
+);
+}
 }

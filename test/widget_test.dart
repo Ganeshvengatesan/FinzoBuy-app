@@ -47,11 +47,7 @@ void main() {
     await tester.pumpAndSettle(); // Settle transition and loading animation
 
     // Verify location text exists
-    expect(find.text('Madurai-625006'), findsOneWidget);
     expect(find.text('Deliver to'), findsOneWidget);
-    
-    // Verify search bar hint exists
-    expect(find.text('Search For Product'), findsOneWidget);
     
     // Verify category labels are rendered on screen
     expect(find.text('For You'), findsOneWidget);

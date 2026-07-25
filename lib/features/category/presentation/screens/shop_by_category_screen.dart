@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/route_names.dart';
 import '../../data/repositories/category_repository_impl.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../controllers/category_controller.dart';
@@ -64,29 +66,30 @@ class _ShopByCategoryScreenState extends State<ShopByCategoryScreen> {
                       ? const Center(child: CircularProgressIndicator())
                       : _controller.errorMessage != null
                           ? Center(child: Text(_controller.errorMessage!))
-                          : SingleChildScrollView(
+                          : GridView.builder(
                               physics: const BouncingScrollPhysics(),
                               padding: const EdgeInsets.only(
                                 left: 16.0,
                                 right: 16.0,
-                                top: 2.0, // Reduced even further to bring cards closer to header
+                                top: 16.0,
                                 bottom: 24.0,
                               ),
-                              child: GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _controller.categories.length,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 14.0,
-                                  mainAxisSpacing: 16.0,
-                                  childAspectRatio: 193 / 199, // 193px width x 199px height per Figma (Group 1000011092)
-                                ),
-                                itemBuilder: (context, index) {
-                                  final category = _controller.categories[index];
-                                  return CategoryCard(category: category);
-                                },
+                              itemCount: _controller.categories.length,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 14.0,
+                                mainAxisSpacing: 16.0,
+                                childAspectRatio: 193 / 199,
                               ),
+                              itemBuilder: (context, index) {
+                                final category = _controller.categories[index];
+                                return CategoryCard(
+                                  category: category,
+                                  onTap: () {
+                                    context.pushNamed(RouteNames.menFashion);
+                                  },
+                                );
+                              },
                             ),
                 ),
               ],
@@ -105,4 +108,3 @@ class _ShopByCategoryScreenState extends State<ShopByCategoryScreen> {
     );
   }
 }
-

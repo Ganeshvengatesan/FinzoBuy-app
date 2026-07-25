@@ -7,32 +7,11 @@ class CartController extends ChangeNotifier {
   factory CartController() => _instance;
   CartController._internal();
 
-  final List<CartItemModel> _items = [
-    CartItemModel(
-      id: '1',
-      title: 'Men Dark Green Cotton Slim Fit Shirt',
-      sizeText: 'Size: L | Color: Dark Green',
-      imageAsset: 'assets/images/men_shirt_dark_green.png',
-      rating: '4.8',
-      deliveryDate: 'Delivery by Thu, 25 Jul',
-      price: 409,
-      originalPrice: 1999,
-      quantity: 1,
-    ),
-    CartItemModel(
-      id: '2',
-      title: 'Men Pink Cotton Casual Shirt',
-      sizeText: 'Size: M | Color: Soft Pink',
-      imageAsset: 'assets/images/men_shirt_pink.png',
-      rating: '4.6',
-      deliveryDate: 'Delivery by Fri, 26 Jul',
-      price: 290,
-      originalPrice: 2000,
-      quantity: 1,
-    ),
-  ];
+  final List<CartItemModel> _items = [];
 
   List<CartItemModel> get items => List<CartItemModel>.from(_items);
+
+  int get itemCount => _items.fold(0, (sum, item) => sum + item.quantity);
 
   OrderSummaryModel get summary {
     double totalMrp = 0;
